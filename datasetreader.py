@@ -5,10 +5,10 @@ from os import listdir
 from cv2 import imread, resize, cvtColor, COLOR_BGR2GRAY
 from keras.utils import to_categorical
 from sklearn.model_selection import train_test_split
+import matplotlib.pyplot as plt
 
 # Settings:
 img_size = 64
-grayscale_images = True
 num_class = 10
 test_size = 0.2
 
@@ -16,7 +16,7 @@ def get_img(data_path):
     # Getting image array from path:
     img = imread(data_path)
     img = cvtColor(img, COLOR_BGR2GRAY)
-    img = resize(img, (img_size, img_size, 1 if grayscale_images else 3))
+    img = resize(img, (img_size, img_size))
     return img
 
 def get_dataset(dataset_path='Dataset'):
@@ -46,6 +46,7 @@ def get_dataset(dataset_path='Dataset'):
     return X_train, X_test, Y_train, Y_test
 
 if __name__ == '__main__':
-    get_dataset('/Users/per/Documents/Dev/python/memory/Maskinin_FinalProject/Sign-Language-Digits-Dataset-master/Dataset')
+    X_train, X_test, Y_train, Y_test = get_dataset('/Users/per/Documents/Dev/python/memory/Maskinin_FinalProject/Sign-Language-Digits-Dataset-master/Dataset')
 
-print(X_train)
+    plt.imshow(X_train[3])
+    plt.show()

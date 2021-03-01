@@ -28,8 +28,8 @@ for gamma in [0.001, 0.01, 0.1, 1, 10, 100]:
         score = svm.score(X_valid, y_valid)
         # if we got a better score, store the score and parameters
         if score > best_score:
-        best_score = score
-        best_parameters = {'C': C, 'gamma': gamma}
+            best_score = score
+            best_parameters = {'C': C, 'gamma': gamma}
 
 
 # rebuild a model on the combined training and validation set,
