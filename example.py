@@ -1,5 +1,6 @@
 # we can take the next step and improve the model’s generalization 
 # performance by tuning its parame‐ters. s. 261
+# - -- --- -- - - -
 """
 One way to resolve this problem is to split the data again, so we 
 have three sets: the training set to build the model, the validation 
@@ -66,4 +67,5 @@ for gamma in [0.001, 0.01, 0.1, 1, 10, 100]:
             # rebuild a model on the combined training and validation set
 svm = SVC(**best_parameters)
 svm.fit(X_trainval, y_trainval)
+
 # Finns ännu en version på s. 265
