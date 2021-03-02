@@ -11,7 +11,7 @@ X_train, X_test, y_train, y_test = datasetreader.get_dataset(
     '/Users/per/Documents/Dev/python/memory/Maskinin_FinalProject/Sign-Language-Digits-Dataset-master/Dataset')
 
 
-target_names = np.array((0, 1, 2, 3, 4, 5, 6, 7, 8, 9))
+target_names = np.array((9, 0, 7, 6, 1, 8, 4, 3, 2, 5))
 #_, h, w = lfw_dataset.images.shape
 # target_names = lfw_dataset.target_names
 nsamples, nx, ny = X_train.shape
@@ -47,10 +47,14 @@ def plot_gallery(images, titles, h, w, rows=3, cols=4):
  
 def titles(y_pred, y_test, target_names):
     for i in range(y_pred.shape[0]):
-        pred_name = y_pred[i]
-        true_name = y_test[i]
+        pred_name_ind =  np.where(y_pred[i] == 1)
+        true_name_ind = np.where(y_test[i] == 1)
+        pred_name = target_names[pred_name_ind[0]]
+        true_name = target_names[true_name_ind[0]]
         yield 'predicted: {0}\ntrue: {1}'.format(pred_name, true_name)
- 
+
+
+
 prediction_titles = list(titles(y_pred, y_test, target_names))
-plot_gallery(X_test, prediction_titles, 64, 64)
+plot_gallery(X_test, prediction_titles, 64, 64, 10, 10)
 plt.show()
