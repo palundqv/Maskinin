@@ -43,8 +43,8 @@ def get_dataset(dataset_path='Dataset'):
         np.save('npy_dataset/X.npy', X)
         np.save('npy_dataset/Y.npy', Y)
     X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=test_size, random_state=0)
-    return X_train, X_test, Y_train, Y_test
+    return X_train, X_test, Y_train, Y_test 
 
 if __name__ == '__main__':
-    X_train, X_test, Y_train, Y_test = get_dataset('/Users/per/Documents/Dev/python/memory/Maskinin_FinalProject/Sign-Language-Digits-Dataset-master/Dataset')
-
+    X_train, X_test, Y_train, Y_test = get_dataset('/Sign-Language-Digits-Dataset-master/Dataset')
+    print(X_train)
