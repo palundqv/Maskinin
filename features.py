@@ -19,7 +19,6 @@ d2_train_dataset = X_train.reshape((nsamples,nx*ny))
 nsamples, nx, ny = X_test.shape
 d2_test_dataset = X_test.reshape((nsamples,nx*ny))
 
-
 def plot_gallery(images, titles, cols=4):
 
     rows = cols
@@ -77,7 +76,6 @@ def find_best_components(max_comp, d2_train_dataset, d2_test_dataset, y_test, X_
             best_comp = comp
             #print(best_score)
     return best_score, best_comp
-    
 
 # Compute a PCA
 n_components = 30
