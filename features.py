@@ -77,27 +77,29 @@ def find_best_components(max_comp, d2_train_dataset, d2_test_dataset, y_test, X_
             #print(best_score)
     return best_score, best_comp
 
-# Compute a PCA
+# Computing a PCA
 n_components = 30
 pca = PCA(n_components=n_components, whiten=True).fit(d2_train_dataset)
 
-# apply PCA transformation
+# appling PCA transformation
 X_train_pca = pca.transform(d2_train_dataset)
 X_test_pca = pca.transform(d2_test_dataset)
 
-# train a neural network
-#print("Fitting the classifier to the training set")
+# appling PCA transformation
 clf = KNeighborsClassifier(n_neighbors = 50).fit(X_train_pca, y_train)
 
+# Predicting y
 y_pred = clf.predict(X_test_pca)
 
+# Använd funktioner nedan - - - - - - - - - - - - - - - - - 
+
 #print(find_best_components(100, d2_train_dataset, d2_test_dataset, y_test, X_train, y_train))
+
 #Kneighbors_plotter(10, X_train_pca, y_train, X_test_pca, y_test)
 
 #plot_gallery(X_test, list(titles(y_pred, y_test, target_names)), 4)
 
 #print(classification_report(y_test, y_pred, target_names=target_names))
-
 
 # k-means clustering för att visualisera datan
 
