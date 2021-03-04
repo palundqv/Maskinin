@@ -22,7 +22,7 @@ nsamples, nx, ny = X_test.shape
 d2_test_dataset = X_test.reshape((nsamples,nx*ny))
 
 # Compute a PCA
-n_components = 30
+n_components = 27
 pca = PCA(n_components=n_components, whiten=True).fit(d2_train_dataset)
 
 # apply PCA transformation
@@ -31,7 +31,7 @@ X_test_pca = pca.transform(d2_test_dataset)
 
 # train a neural network
 #print("Fitting the classifier to the training set")
-#clf = KNeighborsClassifier(n_neighbors = 50, verbose=True).fit(X_train_pca, y_train)
+clf = KNeighborsClassifier(n_neighbors = 3).fit(X_train_pca, y_train)
 
 
 def plot_gallery(images, titles, h, w, rows=3, cols=4):
@@ -87,10 +87,20 @@ def find_best_components(max_comp, d2_train_dataset, d2_test_dataset, y_test, X_
             best_comp = comp
             #print(best_score)
     return best_score, best_comp
-    
 
-#print(find_best_components(100, d2_train_dataset, d2_test_dataset, y_test, X_train, y_train))
-#Kneighbors_plotter(10, X_train_pca, y_train, X_test_pca, y_test)
+def visualize(data):
+    pca = PCA().fit(data)
+    plt.plot(np.cumsum(pca.explained_variance_ratio_))
+    plt.xlabel('number of components')
+    plt.ylabel('cumulative explained variance')
+    plt.show()
+        
+
+
+visualize(d2_train_dataset)
+
+print(find_best_components(50, d2_train_dataset, d2_test_dataset, y_test, X_train, y_train))
+Kneighbors_plotter(10, X_train_pca, y_train, X_test_pca, y_test)
 
 
 
