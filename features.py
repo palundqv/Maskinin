@@ -1,4 +1,5 @@
 print('Loadin...')
+import sys
 import matplotlib.pyplot as plt
 import datasetreader
 import numpy as np
@@ -11,6 +12,7 @@ from sklearn.neighbors import KNeighborsClassifier
 
 X_train, X_test, y_train, y_test, X = datasetreader.get_dataset(
     '/Sign-Language-Digits-Dataset-master/Dataset')
+
 
 target_names = ['9', '0', '7', '6', '1', '8', '4', '3', '2', '5']
 nsamples, nx, ny = X_train.shape
@@ -89,18 +91,29 @@ clf = KNeighborsClassifier(n_neighbors = 3).fit(X_train_pca, y_train)
 
 # Predicting y
 y_pred = clf.predict(X_test_pca)
+
+#print(X_test_pca)
+
+#Koden mellan linjerna är endast för debug och kan tas bort utan att paja något
+#########################################################################################
+np.set_printoptions(threshold=sys.maxsize)
+print(sum(sum(y_test)))
+# Bunch of prints testing stuff
+print("######################################################")   # https://stackoverflow.com/questions/16929203/python-using-scikit-learn-to-predict-gives-blank-predictions
 print("Len of x training data: ", len(X_train_pca))
 print("Len of y training data: ", len(y_train))
 print("Amount of testdata to predict on: ", len(X_test_pca))
 print("Actual predicts: ", sum(sum(y_pred)))
-
+print("Y_train: ", y_train)
+#print(y_pred)
+#########################################################################################
 # Använd funktioner nedan - - - - - - - - - - - - - - - - - 
 
 #print(find_best_components(30, d2_train_dataset, d2_test_dataset, y_test, X_train, y_train))
 
 #Kneighbors_plotter(60, X_train_pca, y_train, X_test_pca, y_test)
 
-plot_gallery(X_test, list(titles(y_pred, y_test, target_names)), 4)
+#plot_gallery(X_test, list(titles(y_pred, y_test, target_names)), 4)
 
 #print(classification_report(y_test, y_pred, target_names=target_names))
 
