@@ -1,20 +1,19 @@
 import datasetreader
 import matplotlib.pyplot as plt
 import numpy as np
+from sklearn.decomposition import PCA
 
 
-X_train, X_test, y_train, y_test = datasetreader.get_dataset(
+X_train, X_test, y_train, y_test, X = datasetreader.get_dataset(
     '/Sign-Language-Digits-Dataset-master/Dataset')
 
-nsamples, nx, ny = X_train.shape
-d2_train_dataset = X_train.reshape((nsamples,nx*ny))
+nsamples, nx, ny = X.shape
+d2_dataset = X.reshape((nsamples,nx*ny))
 
-nsamples, nx, ny = X_test.shape
-d2_test_dataset = X_test.reshape((nsamples,nx*ny))
 
 # Plotta datan i två dimensioner
 pca = PCA(2)  # project from 64 to 2 dimensions
-projected = pca.fit_transform(X_train)
+projected = pca.fit_transform(d2_dataset)
 
 plt.scatter(projected[:, 0], projected[:, 1],
             c=digits.target, edgecolor='none', alpha=0.5,
@@ -27,7 +26,7 @@ plt.colorbar()
 # visualisera ett antal komponenter
 from sklearn.decomposition import RandomizedPCA
 pca = RandomizedPCA(150)
-pca.fit(faces.data)
+pca.fit(X)
 
 fig, axes = plt.subplots(3, 8, figsize=(9, 4), 
 subplot_kw={'xticks':[], 'yticks':[]},
@@ -39,8 +38,6 @@ for i, ax in enumerate(axes.flat):
 #visualiserar kluster
 from sklearn.datasets import make_blobs
 from sklearn.cluster import KMeans
-# generate synthetic two-dimensional data
-X, y = make_blobs(random_state=1)
 # build the clustering model
 kmeans = KMeans(n_clusters=10)
 kmeans.fit(X)

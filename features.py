@@ -78,7 +78,7 @@ def find_best_components(max_comp, d2_train_dataset, d2_test_dataset, y_test, X_
     return best_score, best_comp
 
 # Computing a PCA
-n_components = 30
+n_components = 100
 pca = PCA(n_components=n_components, whiten=True).fit(d2_train_dataset)
 
 # appling PCA transformation
@@ -93,9 +93,9 @@ y_pred = clf.predict(X_test_pca)
 
 # Använd funktioner nedan - - - - - - - - - - - - - - - - - 
 
-#print(find_best_components(100, d2_train_dataset, d2_test_dataset, y_test, X_train, y_train))
+#print(find_best_components(30, d2_train_dataset, d2_test_dataset, y_test, X_train, y_train))
 
-#Kneighbors_plotter(10, X_train_pca, y_train, X_test_pca, y_test)
+Kneighbors_plotter(60, X_train_pca, y_train, X_test_pca, y_test)
 
 #plot_gallery(X_test, list(titles(y_pred, y_test, target_names)), 4)
 
