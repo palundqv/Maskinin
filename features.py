@@ -9,7 +9,7 @@ from sklearn.decomposition import PCA
 from sklearn.neural_network import MLPClassifier
 from sklearn.neighbors import KNeighborsClassifier
 
-X_train, X_test, y_train, y_test = datasetreader.get_dataset(
+X_train, X_test, y_train, y_test, X = datasetreader.get_dataset(
     '/Sign-Language-Digits-Dataset-master/Dataset')
 
 target_names = ['9', '0', '7', '6', '1', '8', '4', '3', '2', '5']
@@ -20,7 +20,6 @@ nsamples, nx, ny = X_test.shape
 d2_test_dataset = X_test.reshape((nsamples,nx*ny))
 
 def plot_gallery(images, titles, cols=4):
-
     rows = cols
     plt.figure()
     for i in range(rows * cols):
@@ -78,7 +77,7 @@ def find_best_components(max_comp, d2_train_dataset, d2_test_dataset, y_test, X_
     return best_score, best_comp
 
 # Computing a PCA
-n_components = 100
+n_components = 30
 pca = PCA(n_components=n_components, whiten=True).fit(d2_train_dataset)
 
 # appling PCA transformation
@@ -86,18 +85,22 @@ X_train_pca = pca.transform(d2_train_dataset)
 X_test_pca = pca.transform(d2_test_dataset)
 
 # appling PCA transformation
-clf = KNeighborsClassifier(n_neighbors = 50).fit(X_train_pca, y_train)
+clf = KNeighborsClassifier(n_neighbors = 3).fit(X_train_pca, y_train)
 
 # Predicting y
 y_pred = clf.predict(X_test_pca)
+print("Len of x training data: ", len(X_train_pca))
+print("Len of y training data: ", len(y_train))
+print("Amount of testdata to predict on: ", len(X_test_pca))
+print("Actual predicts: ", sum(sum(y_pred)))
 
 # Använd funktioner nedan - - - - - - - - - - - - - - - - - 
 
 #print(find_best_components(30, d2_train_dataset, d2_test_dataset, y_test, X_train, y_train))
 
-Kneighbors_plotter(60, X_train_pca, y_train, X_test_pca, y_test)
+#Kneighbors_plotter(60, X_train_pca, y_train, X_test_pca, y_test)
 
-#plot_gallery(X_test, list(titles(y_pred, y_test, target_names)), 4)
+plot_gallery(X_test, list(titles(y_pred, y_test, target_names)), 4)
 
 #print(classification_report(y_test, y_pred, target_names=target_names))
 
