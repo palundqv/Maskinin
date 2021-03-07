@@ -47,4 +47,4 @@ def get_dataset(dataset_path='Dataset'):
 
 if __name__ == '__main__':
     X_train, X_test, Y_train, Y_test, X = get_dataset('/Sign-Language-Digits-Dataset-master/Dataset')
-    print(X_train)
+    print(Y_train)
