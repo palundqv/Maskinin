@@ -3,21 +3,26 @@ import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.decomposition import PCA
 from sklearn.cluster import KMeans
+import pandas as pd 
+import seaborn as sns
 #from sklearn import datasets
 
 
 
-def vis_pca():
-    # Plotta datan i två dimensioner
-    pca = PCA(2)  # project from 64 to 2 dimensions
-    projected = pca.fit_transform(d2_dataset)
+def vis_pca(X, y):
+    pca = PCA(n_components=2)
+    principal_components =  pca.fit_transform(X)
+    pc_df = pd.DataFrame(data = principal_components, columns=['principal_component1', 'principal_component2'])
 
-    plt.scatter(projected[:, 0], projected[:, 1],
-                c=digits.target, edgecolor='none', alpha=0.5,
-                cmap=plt.cm.get_cmap('spectral', 10))
-    plt.xlabel('component 1')
-    plt.ylabel('component 2')
-    plt.colorbar()
+    labels_temp =[]
+    for i in range(len(y)):
+        labels_temp.append(np.argmax(y[i]))
+    
+    pc_df['labels'] = labels_temp
+    pc_df['str_labels'] ='Label_'+(pc_df['labels']).astype(str)
+
+    sns.scatterplot(pc_df['principal_component1'], pc_df['principal_component2'], hue=pc_df['str_labels'])
+    plt.show()
 
 def vis_components():
     # visualisera ett antal komponenter
@@ -57,13 +62,24 @@ def vis_clusters(X, y):
     plt.show()
 
 if __name__ == '__main__':
-    X_train, X_test, y_train, y_test, X, Y = datasetreader.get_dataset(
-    '/Sign-Language-Digits-Dataset-master/Dataset')
+    #X_train, X_test, y_train, y_test, X, Y = datasetreader.get_dataset(
+    #    'Sign-Language-Digits-Dataset-master\Dataset')
 
-    nsamples, nx, ny = X.shape
-    d2_dataset = X.reshape((nsamples,nx*ny))
+    import os
+    for dirname, _, filenames in os.walk('/kaggle/input'):
+        for filename in filenames:
+            print(os.path.join(dirname, filename))
 
-    Y = Y.reshape(Y.shape[0])
+    X = np.load('/kaggle/input/sign-language-digits-dataset/Sign-language-digits-dataset/X.npy')
+    y = np.load('/kaggle/input/sign-language-digits-dataset/Sign-language-digits-dataset/Y.npy')
 
-    vis_clusters(d2_dataset, Y)
+    #nsamples, nx, ny = X.shape
+    #d2_dataset = X.reshape((nsamples,nx*ny))
+    
+    #Y = np.where(Y == 1)[0].astype(int)
 
+    #vis_clusters(d2_dataset, Y)
+
+    X_df = X.reshape(-1,64*64)
+
+    vis_pca(X_df, y)

@@ -13,15 +13,11 @@ import sys
 
 np.set_printoptions(threshold=sys.maxsize)
 
-X_train, X_test, y_train, y_test = datasetreader.get_dataset(
+X_train, X_test, y_train, y_test, X, Y = datasetreader.get_dataset(
     '/Sign-Language-Digits-Dataset-master/Dataset')
 
-<<<<<<< HEAD
-target_names = ['9', '0', '7', '3', '1', '8', '4', '6', '2', '5']
-=======
 
 target_names = ['9', '0', '7', '6', '1', '8', '4', '3', '2', '5']
->>>>>>> c5818a7e3631fffd9056c42dab0ac3b22b54f5ce
 nsamples, nx, ny = X_train.shape
 d2_train_dataset = X_train.reshape((nsamples,nx*ny))
 
@@ -110,11 +106,15 @@ print("Len of y training data: ", len(y_train))
 print("Amount of testdata to predict on: ", len(X_test_pca))
 print("Actual predicts: ", sum(sum(y_pred)))
 print("Y_train: ", y_train)
-'''
+
+
+
 for a in range(1, 100):
     clf = KNeighborsClassifier(n_neighbors = a).fit(X_train_pca, y_train)
     y_pred = clf.predict(X_test_pca)
     print("K =", a, "Missing predicts: ", len(X_test_pca) - sum(sum(y_pred)))
+'''
+print(y_train)
 ###########################################################################################
 # Använd funktioner nedan - - - - - - - - - - - - - - - - - 
 
