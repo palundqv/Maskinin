@@ -1,7 +1,7 @@
 print('Loading...')
 import sys
 import matplotlib.pyplot as plt
-import datasetreader_v2 as datasetreader
+import datasetreader as datasetreader
 import numpy as np
 from sklearn.datasets import fetch_lfw_people
 from sklearn.metrics import classification_report
@@ -12,16 +12,10 @@ import sys
 
 np.set_printoptions(threshold=sys.maxsize)
 
-X_train, X_test, y_train, y_test = datasetreader.get_dataset(
+X_train, X_test, y_train, y_test, X, Y = datasetreader.get_dataset(
     '/Sign-Language-Digits-Dataset-master/Dataset')
 
 target_names = ['9', '0', '7', '3', '1', '8', '4', '6', '2', '5']
-nsamples, nx, ny = X_train.shape
-d2_X_train = X_train.reshape((nsamples,nx*ny))
-
-nsamples, nx, ny = X_test.shape
-d2_X_test = X_test.reshape((nsamples,nx*ny))
-
 
 def plot_gallery(images, titles, cols=4):
     rows = cols
@@ -39,11 +33,11 @@ def titles(y_pred, y_test, target_names):
     predicted_names = []
 
     for i in range(y_pred.shape[0]):
-        pred_name_ind = np.where(y_pred[i] == 1)
-        true_name_ind = np.where(y_test[i] == 1)
-        pred_name = np.array(target_names)[pred_name_ind[0]].astype(int)
-        true_name = np.array(target_names)[true_name_ind[0]].astype(int)
-        predicted_names.append('predicted: {0}\ntrue: {1}'.format(pred_name, true_name))
+        #pred_name_ind = np.where(y_pred[i] == 1)
+        #true_name_ind = np.where(y_test[i] == 1)
+        #pred_name = np.array(target_names)[pred_name_ind[0]].astype(int)
+        #true_name = np.array(target_names)[true_name_ind[0]].astype(int)
+        predicted_names.append('predicted: {0}\ntrue: {1}'.format(y_pred[i], y_test[i]))
     return predicted_names
 
 def Kneighbors_plotter(n_neighbors, X_train_pca, y_train, X_test_pca, y_test):
@@ -85,15 +79,15 @@ def find_best_components(max_comp, d2_train_dataset, d2_test_dataset, y_test, X_
 
 # Computing a PCA
 n_components = 30
-pca = PCA(n_components=n_components, whiten=True).fit(d2_X_train)
+pca = PCA(n_components=n_components, whiten=True).fit(X_train)
 
 # appling PCA transformation
-X_train_pca = pca.transform(d2_X_train)
-X_test_pca = pca.transform(d2_X_test)
+X_train_pca = pca.transform(X_train)
+X_test_pca = pca.transform(X_test)
 
 # appling PCA transformation
-clf = KNeighborsClassifier(n_neighbors = 5).fit(d2_X_train, y_train)
-y_pred = clf.predict(d2_X_test)
+clf = KNeighborsClassifier(n_neighbors = 5).fit(X_train_pca, y_train)
+y_pred = clf.predict(X_test_pca)
 
 # Predicting y
 #Koden mellan linjerna är endast för debug och kan tas bort utan att paja något
@@ -103,7 +97,7 @@ print("######################################################")   # https://stac
 print("Len of x training data: ", len(X_train_pca))
 print("Len of y training data: ", len(y_train))
 print("Amount of testdata to predict on: ", len(X_test_pca))
-print("Actual predicts: ", sum(sum(y_pred)))
+#print("Actual predicts: ", sum(sum(y_pred)))
 '''
 for a in range(1, 10):
     clf = KNeighborsClassifier(n_neighbors = a, weights='distance', algorithm='auto', p=2).fit(X_train_pca, y_train)
@@ -120,7 +114,7 @@ for a in range(1, 10):
 #Kneighbors_plotter(60, X_train_pca, y_train, X_test_pca, y_test)
 
 #titles(y_pred, y_test, target_names)
-#plot_gallery(X_test, titles(y_pred, y_test, target_names), 4)
+plot_gallery(X_test, titles(y_pred, y_test, target_names), 10)
 
 #print(classification_report(y_test, y_pred, target_names=target_names))
 

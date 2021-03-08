@@ -3,43 +3,56 @@ import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.decomposition import PCA
 from sklearn.cluster import KMeans
-#from sklearn import datasets
+import pandas as pd 
+import seaborn as sns
 
 
 
-def vis_pca():
-    # Plotta datan i två dimensioner
-    pca = PCA(2)  # project from 64 to 2 dimensions
-    projected = pca.fit_transform(d2_dataset)
+def vis_pca(X, y):
+    # https://www.kaggle.com/vinayjaju/t-sne-visualization-sign-language-digit-dataset 
+    pca = PCA(n_components=2)
+    principal_components =  pca.fit_transform(X)
+    pc_df = pd.DataFrame(data = principal_components, columns=['principal_component1', 'principal_component2'])
 
-    plt.scatter(projected[:, 0], projected[:, 1],
-                c=digits.target, edgecolor='none', alpha=0.5,
-                cmap=plt.cm.get_cmap('spectral', 10))
-    plt.xlabel('component 1')
-    plt.ylabel('component 2')
-    plt.colorbar()
+    labels_temp =[]
+    for i in range(len(y)):
+        labels_temp.append(np.argmax(y[i]))
+    
+    pc_df['labels'] = labels_temp
+    pc_df['str_labels'] ='Label_'+(pc_df['labels']).astype(str)
 
-def vis_components():
+    sns.scatterplot(pc_df['principal_component1'], pc_df['principal_component2'], hue=pc_df['str_labels'])
+    plt.show()
+
+
+def vis_components(X):
+    # Boken s. 152
     # visualisera ett antal komponenter
-    pca = RandomizedPCA(150)
+    pca = PCA(150)
     pca.fit(X)
 
+    fix, axes = plt.subplots(3, 5, figsize=(15, 12),
+    subplot_kw={'xticks': (), 'yticks': ()})
+    for i, (component, ax) in enumerate(zip(pca.components_, axes.ravel())):
+        ax.imshow(component.reshape(64, 64),
+        cmap='gray')
+        ax.set_title("{}. component".format((i + 1)))
+    plt.show()
+
+    # https://jakevdp.github.io/PythonDataScienceHandbook/05.09-principal-component-analysis.html
+    """
     fig, axes = plt.subplots(3, 8, figsize=(9, 4), 
     subplot_kw={'xticks':[], 'yticks':[]},
     gridspec_kw=dict(hspace=0.1, wspace=0.1))
     for i, ax in enumerate(axes.flat):
-        ax.imshow(pca.components_[i].reshape(62, 47), cmap='bone')
+        ax.imshow(pca.components_[i], cmap='bone')
+        """
+
 
 def vis_clusters(X, y):
-    
+    # Lecture 9 Kmeans
     K = 10
     kmeans = KMeans(n_clusters=K)
-
-    #numClasses = 5
-    #numObservations = numClasses*100
-    #cluster_std = 0.5
-
-    #X,y = datasets.make_blobs(numObservations,centers=numClasses,cluster_std=cluster_std)
 
     kmeans.fit(X)
 
@@ -58,12 +71,10 @@ def vis_clusters(X, y):
 
 if __name__ == '__main__':
     X_train, X_test, y_train, y_test, X, Y = datasetreader.get_dataset(
-    '/Sign-Language-Digits-Dataset-master/Dataset')
+        'Sign-Language-Digits-Dataset-master\Dataset')
 
-    nsamples, nx, ny = X.shape
-    d2_dataset = X.reshape((nsamples,nx*ny))
+    #vis_pca(X, Y)
+    
+    vis_components(X)
 
-    Y = Y.reshape(Y.shape[0])
-
-    vis_clusters(d2_dataset, Y)
-
+    #vis_clusters(X, Y)

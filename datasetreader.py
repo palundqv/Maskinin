@@ -12,6 +12,8 @@ img_size = 64
 num_class = 10
 test_size = 0.2
 
+target_names = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+
 def get_img(data_path):
     # Getting image array from path:
     img = imread(data_path)
@@ -42,9 +44,17 @@ def get_dataset(dataset_path='Dataset'):
             os.makedirs('npy_dataset/')
         np.save('npy_dataset/X.npy', X)
         np.save('npy_dataset/Y.npy', Y)
-    X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=test_size, random_state=0)
-    return X_train, X_test, Y_train, Y_test, X, Y
+    
+    nsamples, nx, ny = X.shape
+    new_X = X.reshape((nsamples,nx*ny))
+            
+    new_Y = []
+    for i in range(len(Y)):
+        new_Y.append(int((target_names[np.where(Y[i] == 1)[0][0]])))
+
+    X_train, X_test, Y_train, Y_test = train_test_split(new_X, np.array(new_Y), test_size=test_size, random_state=0)
+    return X_train, X_test, Y_train, Y_test, new_X, new_Y
 
 if __name__ == '__main__':
-    X_train, X_test, Y_train, Y_test, X, Y = get_dataset('/Sign-Language-Digits-Dataset-master/Dataset')
-    print(Y_train)
+    X_train, X_test, Y_train, Y_test, X, Y  = get_dataset('Sign-Language-Digits-Dataset-master\Dataset')
+    print(X_train)
