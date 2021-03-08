@@ -1,42 +1,26 @@
-print('Loading...')
-import sys
 import matplotlib.pyplot as plt
-import datasetreader as datasetreader
+import datasetreader
 import numpy as np
-from sklearn.datasets import fetch_lfw_people
-from sklearn.metrics import classification_report
 from sklearn.decomposition import PCA
-from sklearn.neural_network import MLPClassifier
 from sklearn.neighbors import KNeighborsClassifier
-import sys
+from sklearn.model_selection import GridSearchCV
 
-np.set_printoptions(threshold=sys.maxsize)
 
-X_train, X_test, y_train, y_test, X, Y = datasetreader.get_dataset(
-    '/Sign-Language-Digits-Dataset-master/Dataset')
-
-target_names = ['9', '0', '7', '3', '1', '8', '4', '6', '2', '5']
-
-def plot_gallery(images, titles, cols=4):
+def plot_gallery(X_test, preds, cols=4):
     rows = cols
     plt.figure()
     for i in range(rows * cols):
         plt.subplot(rows, cols, i + 1)
-        plt.imshow(images[i][:].reshape((64, 64)), cmap=plt.cm.gray)
-        plt.title(titles[i])
+        plt.imshow(X_test[i][:].reshape((64, 64)), cmap=plt.cm.gray)
+        plt.title(preds[i])
         plt.xticks(())
         plt.yticks(())
 
     plt.show()
     
-def titles(y_pred, y_test, target_names):
+def titles(y_pred, y_test):
     predicted_names = []
-
     for i in range(y_pred.shape[0]):
-        #pred_name_ind = np.where(y_pred[i] == 1)
-        #true_name_ind = np.where(y_test[i] == 1)
-        #pred_name = np.array(target_names)[pred_name_ind[0]].astype(int)
-        #true_name = np.array(target_names)[true_name_ind[0]].astype(int)
         predicted_names.append('predicted: {0}\ntrue: {1}'.format(y_pred[i], y_test[i]))
     return predicted_names
 
@@ -77,46 +61,47 @@ def find_best_components(max_comp, d2_train_dataset, d2_test_dataset, y_test, X_
             #print(best_score)
     return best_score, best_comp
 
-# Computing a PCA
-n_components = 30
-pca = PCA(n_components=n_components, whiten=True).fit(X_train)
+def apply_PCA(X_train, X_test, n_components):
+    # Computing a PCA
+    n_components = 30
+    pca = PCA(n_components=n_components, whiten=True).fit(X_train)
 
-# appling PCA transformation
-X_train_pca = pca.transform(X_train)
-X_test_pca = pca.transform(X_test)
+    # appling PCA transformation
+    X_train_pca = pca.transform(X_train)
+    X_test_pca = pca.transform(X_test)
 
-# appling PCA transformation
-clf = KNeighborsClassifier(n_neighbors = 5).fit(X_train_pca, y_train)
-y_pred = clf.predict(X_test_pca)
+    return X_train_pca, X_train_pca
 
-# Predicting y
-#Koden mellan linjerna är endast för debug och kan tas bort utan att paja något
-#########################################################################################
-# Bunch of prints testing stuff
-print("######################################################")   # https://stackoverflow.com/questions/16929203/python-using-scikit-learn-to-predict-gives-blank-predictions
-print("Len of x training data: ", len(X_train_pca))
-print("Len of y training data: ", len(y_train))
-print("Amount of testdata to predict on: ", len(X_test_pca))
-#print("Actual predicts: ", sum(sum(y_pred)))
-'''
-for a in range(1, 10):
-    clf = KNeighborsClassifier(n_neighbors = a, weights='distance', algorithm='auto', p=2).fit(X_train_pca, y_train)
-    y_pred = clf.predict(X_test_pca)
-    print("K =", a, "Missing predicts: ", len(X_test_pca) - sum(sum(y_pred)))
-'''
-###########################################################################################
-# Använd funktioner nedan - - - - - - - - - - - - - - - - - 
+def apply_KNeighborsClassifier(X_train_pca, X_test_pca, y_train, n_neighbors):
+    # https://stackoverflow.com/questions/59830510/defining-distance-parameter-v-in-knn-crossval-grid-search-seuclidean-mahalano
+    
+    knn = KNeighborsClassifier()
+    
+    grid_params = [
+        {'n_neighbors': np.arange(1, 51), 'metric': ['euclidean', 'minkowski']},
+        {'n_neighbors': np.arange(1, 51), 'metric': ['mahalanobis', 'seuclidean'],
+        'metric_params': [{'V': np.cov(X_train_pca)}]}]
 
-#print(classification_report(y_test, y_pred, target_names=target_names))
+    knn_gscv = GridSearchCV(estimator=knn, param_grid=grid_params[0], cv=5)
 
-#print(find_best_components(30, d2_train_dataset, d2_test_dataset, y_test, X_train, y_train))
+    knn_gscv.fit(X_train_pca, y_train)
+    
+    
+    # appling PCA transformation
+    # clf = KNeighborsClassifier(n_neighbors).fit(X_train_pca, y_train)
+    y_pred = knn_gscv.predict(X_test_pca)
+    
+    return y_pred, knn_gscv
 
-#Kneighbors_plotter(60, X_train_pca, y_train, X_test_pca, y_test)
+if __name__ == '__main__':
+    X_train, X_test, y_train, y_test, X, Y = datasetreader.get_dataset(
+        '/Sign-Language-Digits-Dataset-master/Dataset')
+    
+    n_components = 5
+    n_neighbors = 5
 
-#titles(y_pred, y_test, target_names)
-plot_gallery(X_test, titles(y_pred, y_test, target_names), 10)
-
-#print(classification_report(y_test, y_pred, target_names=target_names))
-
-# k-means clustering för att visualisera datan
-
+    X_train_pca, X_test_pca = apply_PCA(X_train, X_test, n_components)
+    y_pred, knn = apply_KNeighborsClassifier(X_train_pca, X_test_pca, y_train, n_neighbors)
+    #knn.score(X_test, y_test)
+    #print("Test set score: {:.2f}".format(np.mean(y_pred == y_test)))
+    plot_gallery(X_test, titles(y_pred, y_test), 5)
