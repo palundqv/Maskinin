@@ -1,17 +1,11 @@
 import datasetreader
 import matplotlib.pyplot as plt
 import numpy as np
-from sklearn.decomposition import RandomizedPCA
 from sklearn.decomposition import PCA
 from sklearn.cluster import KMeans
-from sklearn import datasets
+#from sklearn import datasets
 
 
-X_train, X_test, y_train, y_test, X = datasetreader.get_dataset(
-    '/Sign-Language-Digits-Dataset-master/Dataset')
-
-nsamples, nx, ny = X.shape
-d2_dataset = X.reshape((nsamples,nx*ny))
 
 def vis_pca():
     # Plotta datan i två dimensioner
@@ -36,7 +30,7 @@ def vis_components():
     for i, ax in enumerate(axes.flat):
         ax.imshow(pca.components_[i].reshape(62, 47), cmap='bone')
 
-def vis_clusters(X):
+def vis_clusters(X, y):
     
     K = 10
     kmeans = KMeans(n_clusters=K)
@@ -59,9 +53,17 @@ def vis_clusters(X):
     plt.subplot(122);plt.scatter(X[:,0],X[:,1],alpha=0.5,c=kmeans.labels_)
     plt.scatter(kmeans.cluster_centers_[:,0],kmeans.cluster_centers_[:,1],
             s=50,c='black',marker='x')
-    plt.grid(); plt.show()
+    plt.grid()
+    plt.show()
 
 if __name__ == '__main__':
+    X_train, X_test, y_train, y_test, X, Y = datasetreader.get_dataset(
+    '/Sign-Language-Digits-Dataset-master/Dataset')
 
-    vis_clusters(X)
+    nsamples, nx, ny = X.shape
+    d2_dataset = X.reshape((nsamples,nx*ny))
+
+    Y = Y.reshape(Y.shape[0])
+
+    vis_clusters(d2_dataset, Y)
 
