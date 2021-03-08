@@ -9,6 +9,7 @@ import seaborn as sns
 
 
 
+
 def vis_pca(X, y):
     pca = PCA(n_components=2)
     principal_components =  pca.fit_transform(X)
@@ -87,4 +88,9 @@ if __name__ == '__main__':
 
     X_df = X.reshape(-1,64*64)
 
+<<<<<<< HEAD
     vis_pca(X_df, y)
+=======
+    #vis_clusters(X, Y)
+    #hej hej
+>>>>>>> 071fe2b6cb74ceeeb2f932e5745a134c70c9059c
