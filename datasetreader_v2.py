@@ -45,7 +45,7 @@ def get_dataset(dataset_path='Dataset'):
         np.save('npy_dataset/X.npy', X)
         np.save('npy_dataset/Y.npy', Y)
     X, X_test, Y, Y_test = train_test_split(X, Y, test_size=test_size, random_state=42)
-    return X, X_test, Y, Y_test
+    return X_train, X_test, Y_train, Y_test, X, Y
 
 
 if __name__ == '__main__':
