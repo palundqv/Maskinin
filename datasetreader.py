@@ -53,7 +53,7 @@ def get_dataset(dataset_path='Dataset'):
         new_Y.append(int((target_names[np.where(Y[i] == 1)[0][0]])))
 
     X_train, X_test, Y_train, Y_test = train_test_split(new_X, np.array(new_Y), test_size=test_size, random_state=0)
-    return X_train, X_test, Y_train, Y_test, X, Y
+    return X_train, X_test, Y_train, Y_test, new_X, new_Y
 
 if __name__ == '__main__':
     X_train, X_test, Y_train, Y_test, X, Y  = get_dataset('Sign-Language-Digits-Dataset-master\Dataset')
