@@ -1,9 +1,8 @@
-print('Loadin...')
+print('Loading...')
 import sys
 import matplotlib.pyplot as plt
-import datasetreader
+import datasetreader_v2 as datasetreader
 import numpy as np
-from sklearn.model_selection import train_test_split
 from sklearn.datasets import fetch_lfw_people
 from sklearn.metrics import classification_report
 from sklearn.decomposition import PCA
@@ -16,13 +15,13 @@ np.set_printoptions(threshold=sys.maxsize)
 X_train, X_test, y_train, y_test, X, Y = datasetreader.get_dataset(
     '/Sign-Language-Digits-Dataset-master/Dataset')
 
-
-target_names = ['9', '0', '7', '6', '1', '8', '4', '3', '2', '5']
+target_names = ['9', '0', '7', '3', '1', '8', '4', '6', '2', '5']
 nsamples, nx, ny = X_train.shape
-d2_train_dataset = X_train.reshape((nsamples,nx*ny))
+d2_X_train = X_train.reshape((nsamples,nx*ny))
 
 nsamples, nx, ny = X_test.shape
-d2_test_dataset = X_test.reshape((nsamples,nx*ny))
+d2_X_test = X_test.reshape((nsamples,nx*ny))
+
 
 def plot_gallery(images, titles, cols=4):
     rows = cols
@@ -86,16 +85,16 @@ def find_best_components(max_comp, d2_train_dataset, d2_test_dataset, y_test, X_
 
 # Computing a PCA
 n_components = 30
-pca = PCA(n_components=n_components, whiten=True).fit(d2_train_dataset)
+pca = PCA(n_components=n_components, whiten=True).fit(d2_X_train)
 
 # appling PCA transformation
-X_train_pca = pca.transform(d2_train_dataset)
-X_test_pca = pca.transform(d2_test_dataset)
+X_train_pca = pca.transform(d2_X_train)
+X_test_pca = pca.transform(d2_X_test)
 
 # appling PCA transformation
-clf = KNeighborsClassifier(n_neighbors = 1).fit(X_train_pca, y_train)
-#y_pred = clf.predict(X_test_pca)
-'''
+clf = KNeighborsClassifier(n_neighbors = 5).fit(d2_X_train, y_train)
+y_pred = clf.predict(d2_X_test)
+
 # Predicting y
 #Koden mellan linjerna är endast för debug och kan tas bort utan att paja något
 #########################################################################################
@@ -105,16 +104,12 @@ print("Len of x training data: ", len(X_train_pca))
 print("Len of y training data: ", len(y_train))
 print("Amount of testdata to predict on: ", len(X_test_pca))
 print("Actual predicts: ", sum(sum(y_pred)))
-print("Y_train: ", y_train)
-
-
-
-for a in range(1, 100):
-    clf = KNeighborsClassifier(n_neighbors = a).fit(X_train_pca, y_train)
+'''
+for a in range(1, 10):
+    clf = KNeighborsClassifier(n_neighbors = a, weights='distance', algorithm='auto', p=2).fit(X_train_pca, y_train)
     y_pred = clf.predict(X_test_pca)
     print("K =", a, "Missing predicts: ", len(X_test_pca) - sum(sum(y_pred)))
 '''
-print(y_train)
 ###########################################################################################
 # Använd funktioner nedan - - - - - - - - - - - - - - - - - 
 
