@@ -8,6 +8,7 @@ import seaborn as sns
 
 
 
+
 def vis_pca(X, y):
     # https://www.kaggle.com/vinayjaju/t-sne-visualization-sign-language-digit-dataset 
     pca = PCA(n_components=2)
@@ -78,3 +79,4 @@ if __name__ == '__main__':
     vis_components(X)
 
     #vis_clusters(X, Y)
+    #hej hej
