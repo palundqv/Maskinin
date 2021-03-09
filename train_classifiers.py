@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 import datasetreader
 import numpy as np
+import features
+from sklearn.neural_network import MLPClassifier
 from sklearn.decomposition import PCA
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import GridSearchCV
@@ -49,8 +51,35 @@ def Kneighbors_plotter(n_neighbors, X_train_pca, y_train, X_test_pca, y_test):
 
 # MLP classifier #######################################################################################################################
 
-# def apply mlp classifier
+def apply_MLP_classifier(X_train_pca, X_test_pca, y_train):
+    clf = MLPClassifier(random_state=1, max_iter=300).fit(X_train_pca, y_train)
+    MPL_predicts = clf.predict(X_test_pca)
+    return MPL_predicts
+
+def find_best_interations():
+    pass
+
 
 # CNN classifier #######################################################################################################################
 
-# def apply cnn classifier
+def apply_cnn_classifier():
+    pass
+
+
+########################################################################################################################################
+
+if __name__ == "__main__":
+    X_train, X_test, y_train, y_test, X, Y = datasetreader.get_dataset(
+        '/Sign-Language-Digits-Dataset-master/Dataset')
+    X_train_pca, X_test_pca = features.apply_PCA(X_train, X_test, 30)
+    preds = apply_MLP_classifier(X_train_pca, X_test_pca, y_train)
+    print(preds)
+    print((preds==y_test).sum() / len(y_test))
+
+
+
+
+
+
+
+

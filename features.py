@@ -44,16 +44,14 @@ def find_best_components(max_comp, d2_train_dataset, d2_test_dataset, y_test, X_
             #print(best_score)
     return best_score, best_comp
 
-def apply_PCA(X_train, X_test, n_components):
+def apply_PCA(X_train, X_test, n_components=30):
     # Computing a PCA
-    n_components = 30
     pca = PCA(n_components=n_components, whiten=True).fit(X_train)
-
     # appling PCA transformation
     X_train_pca = pca.transform(X_train)
     X_test_pca = pca.transform(X_test)
 
-    return X_train_pca, X_train_pca
+    return X_train_pca, X_test_pca
 
 
 def vis_num_pca(X):
@@ -75,6 +73,7 @@ if __name__ == '__main__':
     n_neighbors = 5
 
     X_train_pca, X_test_pca = apply_PCA(X_train, X_test, n_components)
+
     #y_pred, knn = apply_KNeighborsClassifier(X_train_pca, X_test_pca, y_train, n_neighbors)
     #knn.score(X_test, y_test)
     #print("Test set score: {:.2f}".format(np.mean(y_pred == y_test)))
