@@ -1,5 +1,11 @@
 import numpy as np
-target_names = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-pred_name_ind = np.array((4, ))
-print(pred_name_ind[0])
-print(target_names[pred_name_ind[0]])
+import train_classifiers
+import features
+import datasetreader
+import visualize_data
+
+X_train, X_test, y_train, y_test, X, Y = datasetreader.get_dataset()
+X_train_pca, X_test_pca = features.apply_PCA(X_train, X_test)
+print(X_train.shape)
+print(X_train_pca.shape)
+visualize_data.vis_components(X)
