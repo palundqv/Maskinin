@@ -21,7 +21,7 @@ def get_img(data_path):
     img = resize(img, (img_size, img_size))
     return img
 
-def get_dataset(dataset_path='Dataset'):
+def get_dataset(dataset_path='Sign-Language-Digits-Dataset-master/Dataset'):
     # Getting all data from data path:
     try:
         X = np.load('npy_dataset/X.npy')

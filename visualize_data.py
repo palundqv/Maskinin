@@ -7,10 +7,9 @@ import pandas as pd
 import seaborn as sns
 
 
-
-def vis_pca(X, y):
+def vis_pca(X, y, n_components=5):
     # https://www.kaggle.com/vinayjaju/t-sne-visualization-sign-language-digit-dataset 
-    pca = PCA(n_components=2)
+    pca = PCA(n_components)
     principal_components =  pca.fit_transform(X)
     pc_df = pd.DataFrame(data = principal_components, columns=['principal_component1', 'principal_component2'])
 
@@ -25,10 +24,10 @@ def vis_pca(X, y):
     plt.show()
 
 
-def vis_components(X):
+def vis_components(X, n_components):
     # Boken s. 152
     # visualisera ett antal komponenter
-    pca = PCA(150)
+    pca = PCA(n_components)
     pca.fit(X)
 
     fix, axes = plt.subplots(3, 5, figsize=(15, 12),

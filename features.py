@@ -4,7 +4,7 @@ import numpy as np
 from sklearn.decomposition import PCA
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import GridSearchCV
-
+import train_classifiers
 
 def plot_gallery(X_test, preds, cols=4):
     rows = cols
@@ -52,7 +52,6 @@ def apply_PCA(X_train, X_test, n_components=30):
     X_test_pca = pca.transform(X_test)
 
     return X_train_pca, X_test_pca
-
 
 def vis_num_pca(X):
     # https://jakevdp.github.io/PythonDataScienceHandbook/05.09-principal-component-analysis.html
