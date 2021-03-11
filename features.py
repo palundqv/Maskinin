@@ -68,7 +68,7 @@ if __name__ == '__main__':
     X_train, X_test, y_train, y_test, X, Y = datasetreader.get_dataset(
         '/Sign-Language-Digits-Dataset-master/Dataset')
     
-    n_components = 5
+    n_components = 2
     n_neighbors = 5
 
     X_train_pca, X_test_pca = apply_PCA(X_train, X_test, n_components)

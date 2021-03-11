@@ -64,7 +64,7 @@ if __name__ == '__main__':
     X_train, X_test, y_train, y_test, X, Y = datasetreader.get_dataset(
         'Sign-Language-Digits-Dataset-master\Dataset')
 
-    vis_pca(X, Y)
+    vis_pca(X, Y, 2)
     
     #vis_components(X)
 
