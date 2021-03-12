@@ -5,10 +5,12 @@ from sklearn.decomposition import PCA
 from sklearn.cluster import KMeans
 import pandas as pd 
 import seaborn as sns
+from sklearn.manifold import TSNE
 
 
 def vis_pca(X, y, n_components=5):
     # https://www.kaggle.com/vinayjaju/t-sne-visualization-sign-language-digit-dataset 
+    #Plottar de två första principal components som tagits fram av PCA.
     pca = PCA(n_components)
     principal_components =  pca.fit_transform(X)
     pc_df = pd.DataFrame(data = principal_components, columns=['principal_component1', 'principal_component2'])
@@ -18,15 +20,15 @@ def vis_pca(X, y, n_components=5):
         labels_temp.append(y[i])
     
     pc_df['labels'] = labels_temp
-    pc_df['str_labels'] = (pc_df['labels']).astype(str)
+    pc_df['Labels'] = (pc_df['labels']).astype(str)
 
-    sns.scatterplot(pc_df['principal_component1'], pc_df['principal_component2'], hue=pc_df['str_labels'], alpha=0.7)
+    sns.scatterplot(pc_df['principal_component1'], pc_df['principal_component2'], hue=pc_df['Labels'], alpha=0.7)
     plt.show()
 
 
-def vis_components(X, n_components):
+def vis_components(X, n_components=15):
     # Boken s. 152
-    # visualisera ett antal komponenter
+    # visualisera n_components i n olika bilder
     pca = PCA(n_components)
     pca.fit(X)
 
@@ -41,6 +43,8 @@ def vis_components(X, n_components):
 
 def vis_clusters(X, y):
     # Lecture 9 Kmeans
+    # Visualiserar datan med k-clusters i 2 dim med k antal center.
+
     K = 10
     kmeans = KMeans(n_clusters=K)
 
@@ -60,12 +64,45 @@ def vis_clusters(X, y):
     plt.show()
 
 
+def vis_tSNE(X, y):
+    # https://towardsdatascience.com/visualising-high-dimensional-datasets-using-pca-and-t-sne-in-python-8ef87e7915b
+    # Visualiserar datan med tSNE.
+    feat_cols = [ 'pixel'+str(i) for i in range(X.shape[1]) ]
+    df = pd.DataFrame(data = X, columns=feat_cols)
+    df['y'] = y
+
+    data_subset = df[feat_cols].values
+    
+    tsne = TSNE(n_components=2, verbose=1, perplexity=40, n_iter=500)
+    tsne_results = tsne.fit_transform(data_subset)
+
+    df['tsne-2d-one'] = tsne_results[:,0]
+    df['tsne-2d-two'] = tsne_results[:,1]
+    plt.figure(figsize=(16,10))
+    sns.scatterplot(
+    x="tsne-2d-one", y="tsne-2d-two",
+    hue="y",
+    palette=sns.color_palette("hls", 10),
+    data=df,
+    legend="full",
+    alpha=0.3)
+    plt.show()
+    
+
 if __name__ == '__main__':
     X_train, X_test, y_train, y_test, X, Y = datasetreader.get_dataset(
         'Sign-Language-Digits-Dataset-master\Dataset')
 
-    vis_pca(X, Y, 2)
+    #vis_pca(X, Y, 2)
     
     #vis_components(X)
 
-    #vis_clusters(X, Y)
+    pca = PCA(50)
+    principal_components =  pca.fit_transform(X_train)
+
+    vis_clusters(principal_components, y_train)
+
+    #pca = PCA(150)
+    #principal_components =  pca.fit_transform(X)
+
+    #vis_tSNE(principal_components, Y)
