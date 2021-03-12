@@ -5,6 +5,7 @@ from sklearn.decomposition import PCA
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import GridSearchCV
 import train_classifiers
+from sklearn.model_selection import StratifiedKFold, cross_val_score
 
 def plot_gallery(X_test, preds, cols=4):
     rows = cols
@@ -24,7 +25,9 @@ def titles(y_pred, y_test):
         predicted_names.append('predicted: {0}\ntrue: {1}'.format(y_pred[i], y_test[i]))
     return predicted_names
 
+
 def find_best_components(max_comp, d2_train_dataset, d2_test_dataset, y_test, X_train, y_train):
+    # predictar med kNN med olika antal pca komponenter.
     best_score = 0
     best_comp = 0
     for comp in range(1, max_comp):
@@ -44,6 +47,7 @@ def find_best_components(max_comp, d2_train_dataset, d2_test_dataset, y_test, X_
             #print(best_score)
     return best_score, best_comp
 
+
 def apply_PCA(X_train, X_test, n_components=30):
     # Computing a PCA
     pca = PCA(n_components=n_components, whiten=True).fit(X_train)
@@ -53,8 +57,10 @@ def apply_PCA(X_train, X_test, n_components=30):
 
     return X_train_pca, X_test_pca
 
+
 def vis_num_pca(X):
     # https://jakevdp.github.io/PythonDataScienceHandbook/05.09-principal-component-analysis.html
+    # Plottar varians i datan mot antalet komponenter hos PCA.
     pca = PCA(1000)
     pca.fit(X)
 
@@ -64,6 +70,7 @@ def vis_num_pca(X):
     plt.show()
 
 
+
 if __name__ == '__main__':
     X_train, X_test, y_train, y_test, X, Y = datasetreader.get_dataset(
         '/Sign-Language-Digits-Dataset-master/Dataset')
@@ -71,11 +78,11 @@ if __name__ == '__main__':
     n_components = 2
     n_neighbors = 5
 
-    X_train_pca, X_test_pca = apply_PCA(X_train, X_test, n_components)
+    #X_train_pca, X_test_pca = apply_PCA(X_train, X_test, n_components)
 
     #y_pred, knn = apply_KNeighborsClassifier(X_train_pca, X_test_pca, y_train, n_neighbors)
     #knn.score(X_test, y_test)
     #print("Test set score: {:.2f}".format(np.mean(y_pred == y_test)))
     #plot_gallery(X_test, titles(y_pred, y_test), 5)
 
-    vis_num_pca(X)
+    #vis_num_pca(X)
