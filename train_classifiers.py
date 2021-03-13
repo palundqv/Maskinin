@@ -1,13 +1,13 @@
 import matplotlib.pyplot as plt
 import datasetreader
 import numpy as np
-import features
+import PCA
 import tensorflow as tf
 from tensorflow.keras import datasets, layers, models
 
 from sklearn.decomposition import PCA
 
-import features
+import PCA
 import sys
 import numpy
 from sklearn.metrics import classification_report

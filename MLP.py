@@ -1,5 +1,5 @@
 import datasetreader
-import features
+import PCA 
 import matplotlib.pyplot as plt
 from sklearn.model_selection import GridSearchCV
 from sklearn.neural_network import MLPClassifier
@@ -26,15 +26,16 @@ def MLP_param(X_train_pca, y_train, X_test_pca):
     return y_pred, MLP_gscv
 
 def plot_MPL_params(X_train_pca, X_test_pca, y_train, y_test):
-    max_miters = 1000
+    max_miters = 100
     training_error = []
     validation_error = []
     for iteration in range(max_miters):
-        clf = MPLClassifier(random_state = 1, max_iter=iteration).fit(X_train_pca, y_train)
+        clf = MLPClassifier(random_state = 1, max_iter=iteration + 1).fit(X_train_pca, y_train)
         t_predicts = clf.predict(X_train_pca)
         v_predicts = clf.predict(X_test_pca)
         training_error.append(1 - (t_predicts == y_train).sum() / len(y_train))
         validation_error.append(1 - (v_predicts == y_test).sum() / len(y_test))
+    print(training_error)
     plt.plot(training_error)
     plt.show
     
@@ -42,7 +43,7 @@ def plot_MPL_params(X_train_pca, X_test_pca, y_train, y_test):
 if __name__ == "__main__":
     X_train, X_test, y_train, y_test, X, Y = datasetreader.get_dataset(
         '/Sign-Language-Digits-Dataset-master/Dataset')
-    X_train_pca, X_test_pca = features.apply_PCA(X_train, X_test)
+    X_train_pca, X_test_pca = PCA.apply_PCA(X_train, X_test)
     plot_MPL_params(X_train_pca, X_test_pca, y_train, y_test)
 
 
