@@ -4,10 +4,9 @@ import numpy as np
 import features
 import tensorflow as tf
 from tensorflow.keras import datasets, layers, models
-from sklearn.neural_network import MLPClassifier
+
 from sklearn.decomposition import PCA
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.model_selection import GridSearchCV
+
 import features
 import sys
 import numpy
@@ -16,84 +15,9 @@ numpy.set_printoptions(threshold=sys.maxsize)
 
 
 # KNN Classifier ##############################################################################################################
-def apply_KNeighborsClassifier(X_train_pca, X_test_pca, y_train):
-    # https://stackoverflow.com/questions/59830510/defining-distance-parameter-v-in-knn-crossval-grid-search-seuclidean-mahalano
-    # Hittar bästa kombinationen av hyperparametrarna k och distance av kNN och predictar på dem.
-
-    knn = KNeighborsClassifier()
-    
-    grid_params = [
-        {'n_neighbors': np.arange(1, 51), 'metric': ['euclidean', 'minkowski', 'manhattan', 'chebyshev', 'hamming']}]
-
-    knn_gscv = GridSearchCV(estimator=knn, param_grid=grid_params, cv=5)
-    knn_gscv.fit(X_train_pca, y_train)
-
-    y_pred = knn_gscv.predict(X_test_pca)
-    
-    return y_pred, knn_gscv
-
-
-def Kneighbors_plotter(n_neighbors, X_train_pca, y_train, X_test_pca, y_test):
-    # Plottar accuracy mot antalet k i kNN.
-    test_accuracy = []
-    training_accuracy = []
-    neighbors = np.arange(1,n_neighbors,1)
-    for k in neighbors:
-        clf = KNeighborsClassifier(n_neighbors = k).fit(X_train_pca, y_train)
-        test_accuracy.append(clf.score(X_test_pca, y_test))
-        training_accuracy.append(clf.score(X_train_pca, y_train))
-
-    plt.plot(neighbors, test_accuracy, label="test accuracy")
-    plt.plot(neighbors, training_accuracy, label="training accuracy")
-    plt.ylabel("Accuracy")
-    plt.xlabel("n_neighbors")
-    plt.legend()
-    plt.grid()
-    plt.show()
 
 # MLP classifier #######################################################################################################################
 
-def apply_MLP_classifier(X_train_pca, X_test_pca, y_train):
-    clf = MLPClassifier(random_state=1, max_iter=300).fit(X_train_pca, y_train)
-    MPL_predicts = clf.predict(X_test_pca)
-    return MPL_predicts
-
-def MLP_param(X_train_pca, y_train, X_test_pca):
-    MLP = MLPClassifier()
-    grid_params = [{'max_iter': [1000],
-    'hidden_layer_sizes': [(50,50,50), (50,100,50), (100,)],
-    'activation': ['tanh', 'relu'],
-    'solver': ['sgd', 'adam'],
-    'alpha': [0.0001, 0.05],
-    'learning_rate': ['constant','adaptive']}]
-    MLP_gscv = GridSearchCV(estimator=MLP, param_grid=grid_params, cv=5)
-    
-    MLP_gscv.fit(X_train_pca, y_train)
-    y_pred = MLP_gscv.predict(X_test_pca)
-
-    return y_pred, MLP_gscv
-
-# CNN classifier #######################################################################################################################
-
-# def apply cnn classifier
-def apply_cnn_classifier(X_train, X_test, y_train, y_test):
-    model = models.Sequential()
-    model.add(layers.Conv2D(32, (3, 3), activation='relu', input_shape=(64, 64, 1)))
-    model.add(layers.MaxPooling2D((2, 2)))
-    model.add(layers.Conv2D(64, (3, 3), activation='relu'))
-    model.add(layers.MaxPooling2D((2, 2)))
-    model.add(layers.Conv2D(64, (3, 3), activation='relu'))
-    model.add(layers.Flatten())
-    model.add(layers.Dense(64, activation='relu'))
-    model.add(layers.Dense(10))
-    model.summary()
-
-    model.compile(optimizer='adam',
-              loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
-              metrics=['accuracy'])
-
-    history = model.fit(X_train, y_train, epochs=10, 
-                    validation_data=(X_test, y_test))
 
 ########################################################################################################################################
 

@@ -5,7 +5,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
-import train_classifiers
+import train_classifiers6
 import plot_gallery
 
 def find_best_amount_components_PCA(max_components, n_neighbors,  X_train, X_test, y_train, y_test):
@@ -38,9 +38,10 @@ def find_best_amount_neighbors_with_PCA(max_neighbors, max_components, X_train, 
         
     return best_score, best_neighbor, best_comp
 
-def apply_PCA(X_train, X_test, n_components=30):
+def apply_PCA(X_train, X_test, n_components=0.95):
     # Computing a PCA
     pca = PCA(n_components=n_components, whiten=True).fit(X_train)
+    pca.get_params()
     # appling PCA transformation
     X_train_pca = pca.transform(X_train)
     X_test_pca = pca.transform(X_test)
@@ -69,7 +70,7 @@ if __name__ == '__main__':
     
     X_train_train, X_validation, y_train_train, y_validation = train_test_split(X_train, y_train, test_size=0.3, random_state=0)
     X_train_val_pca, y_train_val_pca = apply_PCA(X_train_train, X_validation, 0.95)
-    print(X_train_val_pca.)
+    
     #print(find_best_amount_components_PCA(10, 10, X_validation, X_train_train, y_validation, y_train_train))
     #print(find_best_amount_neighbors_with_PCA(15, 495, X_validation, X_train_train, y_validation, y_train_train))
     print('Done')

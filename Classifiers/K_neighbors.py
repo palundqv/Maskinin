@@ -17,6 +17,8 @@ def apply_KNeighborsClassifier(X_train, X_test, y_train):
     
     return y_pred, knn_gscv
 
+    
+
     def Kneighbors_plotter(n_neighbors, X_train_pca, y_train, X_test_pca, y_test):
     # Plottar accuracy mot antalet k i kNN.
     test_accuracy = []
