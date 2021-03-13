@@ -47,8 +47,10 @@ def apply_PCA(X_train, X_test, n_components=30):
 
     return X_train_pca, X_test_pca
 
+
 def vis_num_pca(X):
     # https://jakevdp.github.io/PythonDataScienceHandbook/05.09-principal-component-analysis.html
+    # Plottar varians i datan mot antalet komponenter hos PCA.
     pca = PCA(1000)
     pca.fit(X)
 
@@ -58,7 +60,15 @@ def vis_num_pca(X):
     plt.show()
 
 
+
 if __name__ == '__main__':
+    X_train, X_test, y_train, y_test, X, Y = datasetreader.get_dataset(
+        '/Sign-Language-Digits-Dataset-master/Dataset')
+    
+    n_components = 2
+    n_neighbors = 5
+
+    #X_train_pca, X_test_pca = apply_PCA(X_train, X_test, n_components)
 
     from sklearn.model_selection import train_test_split
     X_train, X_test, y_train, y_test, X, Y = datasetreader.get_dataset()

@@ -1,5 +1,5 @@
 # we can take the next step and improve the model’s generalization 
-# performance by tuning its parame‐ters. s. 261
+# performance by tuning its parameters. s. 261
 # - -- --- -- - - -
 """
 One way to resolve this problem is to split the data again, so we 
