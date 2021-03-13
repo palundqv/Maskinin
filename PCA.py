@@ -46,7 +46,7 @@ def apply_PCA(X_train, X_test, n_components=0.95):
     X_train_pca = pca.transform(X_train)
     X_test_pca = pca.transform(X_test)
 
-    return X_train_pca, X_test_pca
+    return X_train_pca, X_test_pca, pca
 
 def vis_num_pca(X):
     # https://jakevdp.github.io/PythonDataScienceHandbook/05.09-principal-component-analysis.html
