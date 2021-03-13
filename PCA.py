@@ -5,7 +5,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
-import train_classifiers6
+import train_classifiers
 import plot_gallery
 
 def find_best_amount_components_PCA(max_components, n_neighbors,  X_train, X_test, y_train, y_test):
@@ -46,7 +46,7 @@ def apply_PCA(X_train, X_test, n_components=0.95):
     X_train_pca = pca.transform(X_train)
     X_test_pca = pca.transform(X_test)
 
-    return X_train_pca, X_test_pca
+    return X_train_pca, X_test_pca, pca
 
 def vis_num_pca(X):
     # https://jakevdp.github.io/PythonDataScienceHandbook/05.09-principal-component-analysis.html
