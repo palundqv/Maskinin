@@ -42,8 +42,6 @@ def apply_PCA(X_train, X_test, n_components=30):
     # Computing a PCA
     pca = PCA(n_components=n_components, whiten=True).fit(X_train)
     # appling PCA transformation
-    print(X_train)
-    print(X_test)
     X_train_pca = pca.transform(X_train)
     X_test_pca = pca.transform(X_test)
 
@@ -70,8 +68,8 @@ if __name__ == '__main__':
     #X_train_pca, X_test_pca = apply_PCA(X_train, X_test, n_components)
     
     X_train_train, X_validation, y_train_train, y_validation = train_test_split(X_train, y_train, test_size=0.3, random_state=0)
-
-    X_train_val_pca, y_train_val_pca = apply_PCA(X_train_train, y_train_train, 30)
+    X_train_val_pca, y_train_val_pca = apply_PCA(X_train_train, X_validation, 0.95)
+    print(X_train_val_pca.)
     #print(find_best_amount_components_PCA(10, 10, X_validation, X_train_train, y_validation, y_train_train))
     #print(find_best_amount_neighbors_with_PCA(15, 495, X_validation, X_train_train, y_validation, y_train_train))
     print('Done')
