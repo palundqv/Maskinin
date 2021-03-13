@@ -1,6 +1,7 @@
 import datasetreader
 import PCA 
 import matplotlib.pyplot as plt
+import numpy as np
 from sklearn.model_selection import GridSearchCV
 from sklearn.neural_network import MLPClassifier
 
@@ -26,9 +27,10 @@ def MLP_param(X_train_pca, y_train, X_test_pca):
     return y_pred, MLP_gscv
 
 def plot_MPL_params(X_train_pca, X_test_pca, y_train, y_test):
-    max_miters = 100
+    max_miters = 50
     training_error = []
     validation_error = []
+    t = np.linspace
     for iteration in range(max_miters):
         clf = MLPClassifier(random_state = 1, max_iter=iteration + 1).fit(X_train_pca, y_train)
         t_predicts = clf.predict(X_train_pca)
@@ -37,7 +39,7 @@ def plot_MPL_params(X_train_pca, X_test_pca, y_train, y_test):
         validation_error.append(1 - (v_predicts == y_test).sum() / len(y_test))
     print(training_error)
     plt.plot(training_error)
-    plt.show
+    plt.show()
     
     
 if __name__ == "__main__":
