@@ -20,21 +20,20 @@ def vis_pca(X, y, n_components=5):
     pc_df['labels'] = labels_temp
     pc_df['str_labels'] = (pc_df['labels']).astype(str)
 
-    sns.scatterplot(pc_df['principal_component1'], pc_df['principal_component2'], hue=pc_df['str_labels'], alpha=0.7)
+    sns.scatterplot(pc_df['principal_component 1'], pc_df['principal_component 2'], hue=pc_df['str_labels'], alpha=0.7)
     plt.show()
 
 
-def vis_components(X, n_components):
+def vis_PCA_components(X, n_components):
     # Boken s. 152
     # visualisera ett antal komponenter
-    pca = PCA(n_components)
+    pca = PCA(n_components, whiten=True, random_state=0)
     pca.fit(X)
 
     fix, axes = plt.subplots(3, 5, figsize=(15, 12),
     subplot_kw={'xticks': (), 'yticks': ()})
-    for i, (component, ax) in enumerate(zip(pca.components_, axes.ravel())):
-        ax.imshow(component.reshape(64, 64),
-        cmap='gray')
+    for i, (component, ax) in enumerate( zip(pca.components_, axes.ravel()) ):
+        ax.imshow(component.reshape(64, 64), cmap='gray')
         ax.set_title("{}. component".format((i + 1)))
     plt.show()
 
