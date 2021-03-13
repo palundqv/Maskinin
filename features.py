@@ -7,7 +7,8 @@ from sklearn.model_selection import GridSearchCV
 import train_classifiers
 from sklearn.model_selection import StratifiedKFold, cross_val_score
 
-def plot_gallery(X_test, preds, cols=4):
+def plot_pic_gallery(X_test, preds, cols=4):
+    #printar bilder på händerna
     rows = cols
     plt.figure()
     for i in range(rows * cols):
@@ -19,7 +20,8 @@ def plot_gallery(X_test, preds, cols=4):
 
     plt.show()
     
-def titles(y_pred, y_test):
+def pic_titles(y_pred, y_test):
+    #hittar titlarna till bilderna
     predicted_names = []
     for i in range(y_pred.shape[0]):
         predicted_names.append('predicted: {0}\ntrue: {1}'.format(y_pred[i], y_test[i]))
@@ -83,6 +85,6 @@ if __name__ == '__main__':
     #y_pred, knn = apply_KNeighborsClassifier(X_train_pca, X_test_pca, y_train, n_neighbors)
     #knn.score(X_test, y_test)
     #print("Test set score: {:.2f}".format(np.mean(y_pred == y_test)))
-    #plot_gallery(X_test, titles(y_pred, y_test), 5)
+    #plot_gallery(X_test, pic_titles(y_pred, y_test), 5)
 
     #vis_num_pca(X)
