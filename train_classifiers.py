@@ -6,8 +6,8 @@ import tensorflow as tf
 from tensorflow.keras import datasets, layers, models
 from sklearn.neural_network import MLPClassifier
 from sklearn.decomposition import PCA
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.model_selection import GridSearchCV
+
+import PCA
 import sys
 import numpy
 from sklearn.metrics import classification_report
