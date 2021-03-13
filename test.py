@@ -1,11 +1,10 @@
 import numpy as np
-import train_classifiers
-import features
 import datasetreader
-import visualize_data
+import train_classifiers
+import numpy as np
 
-X_train, X_test, y_train, y_test, X, Y = datasetreader.get_dataset()
-X_train_pca, X_test_pca = features.apply_PCA(X_train, X_test)
-print(X_train.shape)
-print(X_train_pca.shape)
-visualize_data.vis_components(X)
+X_train, X_test, y_train, y_test, new_X, new_Y = datasetreader.get_dataset()
+
+rho = np.corrcoef(X_train)
+rho.style.background_gradient(cmap='coolwarm', axis=None).set_precision(2)
+print('done!')
