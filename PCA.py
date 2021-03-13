@@ -48,7 +48,6 @@ def apply_PCA(X_train, X_test, n_components=0.95):
 
     return X_train_pca, X_test_pca
 
-
 def vis_num_pca(X):
     # https://jakevdp.github.io/PythonDataScienceHandbook/05.09-principal-component-analysis.html
     # Plottar varians i datan mot antalet komponenter hos PCA.
