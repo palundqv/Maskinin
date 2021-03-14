@@ -52,7 +52,7 @@ def plot_MPL_params(X_train_pca, X_test_pca, y_train, y_test):
 def evaluate(y_test, y_pred):
     # printar ut tabell med precision, recall, accuracy och f-measure
     target_names = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
-    print(classification_report(y_test, y_pred,target_names=target_names))
+    print(classification_report(y_test, y_pred, target_names=target_names))
 
 
 if __name__ == "__main__":

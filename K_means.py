@@ -25,13 +25,23 @@ def plotOptimalElbow(X_train):
     model.fit(X_train)
     model.show()
 
-def showTestScoreKmeans():
+def evaluate_print(y_test, y_pred):
+    # printar ut tabell med precision, recall, accuracy och f-measure
+    target_names = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+    print(classification_report(y_test, y_pred, target_names=target_names))
+
+def apply_Kmeans(X_train, X_test):
+    return Kmeans(n_clusters=32).fit(X_train).predict(X_test_pca)
 
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     X_train, X_test, y_train, y_test, X, Y = datasetreader.get_dataset()
     X_train_pca, X_test_pca, pca = PCA.apply_PCA(X_train, X_test, 0.60)
+    y_pred = apply_Kmeans(X_train_pca, X_test_pca)
+    evaluate_print(y_test, y_pred)
+
+
+
 
 
 
