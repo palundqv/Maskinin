@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 # Settings:
 img_size = 64
 num_class = 10
-test_size = 0.2
+test_size = 0.3
 
 target_names = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 
