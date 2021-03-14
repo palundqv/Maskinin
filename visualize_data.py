@@ -89,8 +89,7 @@ def vis_tSNE(X, y):
     
 
 if __name__ == '__main__':
-    X_train, X_test, y_train, y_test, X, Y = datasetreader.get_dataset(
-        'Sign-Language-Digits-Dataset-master\Dataset')
+    X_train, X_test, y_train, y_test, X, Y = datasetreader.get_dataset()
 
     #vis_pca(X, Y, 2)
     
@@ -104,4 +103,4 @@ if __name__ == '__main__':
     #pca = PCA(150)
     #principal_components =  pca.fit_transform(X)
 
-    vis_tSNE(principal_components, y_train)
+    vis_PCA_components(X_train, 0.95)
