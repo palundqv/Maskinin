@@ -27,7 +27,7 @@ def MLP_param(X_val_pca, y_val, X_test_pca):
     return y_pred, MLP_gscv
 
 def plot_MPL_params(X_train_pca, X_test_pca, y_train, y_test):
-    max_miters = 1000
+    max_miters = 500
     training_error = []
     validation_error = []
     t = np.linspace(0, max_miters, max_miters)
@@ -37,7 +37,6 @@ def plot_MPL_params(X_train_pca, X_test_pca, y_train, y_test):
         v_predicts = clf.predict(X_test_pca)
         training_error.append(1 - (t_predicts == y_train).sum() / len(y_train))
         validation_error.append(1 - (v_predicts == y_test).sum() / len(y_test))
-    
     plt.plot(t, training_error)
     plt.plot(t, validation_error)
     plt.show()

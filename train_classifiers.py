@@ -6,7 +6,6 @@ import tensorflow as tf
 from tensorflow.keras import datasets, layers, models
 from sklearn.neural_network import MLPClassifier
 from sklearn.decomposition import PCA
-
 import PCA
 import sys
 import numpy
