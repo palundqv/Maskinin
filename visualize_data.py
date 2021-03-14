@@ -28,7 +28,7 @@ def vis_pca(X, y, n_components=5):
 
 def vis_PCA_components(X, n_components):
     # Boken s. 152
-    # visualisera ett antal komponenter
+    # visualisera ett antal komponenter i bilderna
     pca = PCA(n_components, whiten=True, random_state=0)
     pca.fit(X)
 
@@ -72,7 +72,7 @@ def vis_tSNE(X, y):
 
     data_subset = df[feat_cols].values
     
-    tsne = TSNE(n_components=2, verbose=1, perplexity=50, n_iter=1000, learning_rate=1000)
+    tsne = TSNE(n_components=2, verbose=1, perplexity=10, n_iter=1000, learning_rate=1000)
     tsne_results = tsne.fit_transform(data_subset)
 
     df['tsne-2d-one'] = tsne_results[:,0]
@@ -89,19 +89,18 @@ def vis_tSNE(X, y):
     
 
 if __name__ == '__main__':
-    X_train, X_test, y_train, y_test, X, Y = datasetreader.get_dataset(
-        'Sign-Language-Digits-Dataset-master\Dataset')
+    X_train, X_test, y_train, y_test, X, Y = datasetreader.get_dataset()
 
     #vis_pca(X, Y, 2)
     
     #vis_components(X)
 
-    pca = PCA(30)
-    principal_components =  pca.fit_transform(X_train)
+    pca = PCA(0.6)
+    principal_components =  pca.fit_transform(X)
 
     #vis_clusters(principal_components, y_train)
 
     #pca = PCA(150)
     #principal_components =  pca.fit_transform(X)
 
-    vis_tSNE(principal_components, y_train)
+    vis_tSNE(principal_components, Y)
