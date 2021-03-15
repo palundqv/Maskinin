@@ -21,10 +21,10 @@ def print_cluster_curve(X_train, amount_of_interations):
     plt.show()
 
 
-def plotOptimalElbow(X_train):
+def plotOptimalElbow(X_train, max_interation):
     # https://www.scikit-yb.org/en/latest/api/cluster/elbow.html#:~:text=The%20elbow%20method%20runs%20k,point%20to%20its%20assigned%20center.
     # med PCA.apply_PCA(X_train, X_test, 0.60) blev resultatet k = 32
-    model = KElbowVisualizer(KMeans(), k=200)
+    model = KElbowVisualizer(KMeans(), k=max_interation)
     model.fit(X_train)
     model.show()
 
@@ -41,7 +41,7 @@ def apply_Kmeans(X_train, X_test, n_clusters):
     return y_pred, kmeans
 
 
-def retrieve_info(cluster_labels,y_train):
+def retrieve_info(kmeans, cluster_labels,y_train):
     '''
     Associates most probable label with each cluster in KMeans model
     returns: dictionary of clusters assigned to each label
@@ -82,9 +82,10 @@ def wierd_calculator_I_dont_understand():
     for i in range(len(kmeans.labels_)):
         number_labels[i] = reference_labels[kmeans.labels_[i]]
  
-def calculate_accuracy_kmeans(n_clusters, kmeans, y_train):
 
-    reference_labels = retrieve_info(kmeans.labels_, y_train)
+def calculate_accuracy_kmeans(kmeans, y_train):
+
+    reference_labels = retrieve_info(kmeans, kmeans.labels_, y_train)
     number_labels = np.random.rand(len(kmeans.labels_))
     for i in range(len(kmeans.labels_)):
         number_labels[i] = reference_labels[kmeans.labels_[i]]
@@ -92,44 +93,30 @@ def calculate_accuracy_kmeans(n_clusters, kmeans, y_train):
     return 'Accuracy score : {}'.format(accuracy_score(number_labels, y_train))
 
 
+def plot_best_accuracy_score_kmeans(X_train, X_test, max_interation):
+    cluster_scores = []
+    for i in range(1, max_interation):
+        kmeans = KMeans(n_clusters=i, random_state=0)
+        kmeans.fit(X_train)
+        reference_labels = retrieve_info(kmeans, kmeans.labels_, y_train)
+        number_labels = np.random.rand(len(kmeans.labels_))
+        for i in range(len(kmeans.labels_)):
+            number_labels[i] = reference_labels[kmeans.labels_[i]]
+        cluster_scores.append(accuracy_score(number_labels, y_train))
+
+    plt.figure(figsize=(10, 8))
+    plt.plot(range(1, max_interation), cluster_scores, marker='1', linestyle='--')
+    plt.show()
 
 if __name__ == "__main__":
     X_train, X_test, y_train, y_test, X, Y = datasetreader.get_dataset()
     X_train_pca, X_test_pca, pca = PCA.apply_PCA(X_train, X_test, 0.60)
-    y_pred, kmeans = apply_Kmeans(X_train_pca, X_test_pca, 34)
-    y_pred, kmeans = apply_Kmeans(X_train_pca, X_test_pca, 255)
+    
+    plot_best_accuracy_score_kmeans(X_train_pca, X_test_pca, 500)
+    
+    #y_pred, kmeans = apply_Kmeans(X_train_pca, X_test_pca, 45)
+    #y_pred, kmeans2 = apply_Kmeans(X_train_pca, X_test_pca, 255)
 
-    print(calculate_accuracy_kmeans(34, kmeans, y_train))
-    print(calculate_accuracy_kmeans(255, kmeans, y_train))
-
-'''
-print(kmeans2.cluster_centers_.shape)
-
-fig, ax = plt.subplots(2, 5, figsize=(8, 3))
-print(kmeans.cluster_centers_.shape)
-centers = kmeans.cluster_centers_.reshape(10, 17, 24)
-
-for axi, center in zip(ax.flat, centers):
-    axi.set(xticks=[], yticks=[])
-    axi.imshow(center, interpolation='nearest')
-#plt.show()
-'''
-'''
-for ax, comp_kmeans in zip(axes.T, kmeans.cluster_centers_): 
-    print(kmeans.cluster_centers_.shape)
-    print(kmeans.labels_.shape)
-    ax[0].imshow(comp_kmeans.reshape(10, 64, 64)) 
-
-axes[0, 0].set_ylabel("kmeans") 
-'''
-
-
-
-'''
-fig, axes = plt.subplots(3, 5, figsize=(15, 12), subplot_kw={'xticks': (), 'yticks': ()})
-for ax, component in enumerate(kmeans.cluster_centers_[kmeans.labels_]):
-
-    ax.imshow(component.reshape(64, 64), cmap='gray')
-    ax.set_title("{}. Cluster_center".format((ax + 1)))
-plt.show()
-'''
+    #plotOptimalElbow(X_train_pca, 500)
+    #print(calculate_accuracy_kmeans(kmeans, y_train))
+    #print(calculate_accuracy_kmeans(kmeans2, y_train))
