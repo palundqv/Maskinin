@@ -1,4 +1,7 @@
 import datasetreader
+import PCA
+import K_neighbors
+import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.decomposition import PCA
@@ -6,6 +9,7 @@ from sklearn.cluster import KMeans
 import pandas as pd 
 import seaborn as sns
 from sklearn.manifold import TSNE
+from sklearn.metrics import confusion_matrix
 
 
 def vis_pca(X, y, n_components=5):
@@ -72,7 +76,7 @@ def vis_tSNE(X, y):
 
     data_subset = df[feat_cols].values
     
-    tsne = TSNE(n_components=2, verbose=1, perplexity=10, n_iter=1000, learning_rate=1000)
+    tsne = TSNE(n_components=2, verbose=1, perplexity=50, n_iter=1000, learning_rate=1000)
     tsne_results = tsne.fit_transform(data_subset)
 
     df['tsne-2d-one'] = tsne_results[:,0]
@@ -86,21 +90,26 @@ def vis_tSNE(X, y):
     legend="full",
     alpha=0.3)
     plt.show()
+
+def vis_classifiers_confusion(X_train, X_test, y_train, y_test):
+    X_train_pca , X_test_pca = apply_PCA(X_train, X_test)
+    mlp_p = apply_MLP_classifier(X_train_pca, X_test_pca, y_train)
+    knn_p = apply_knn_classifier(X_train_pca, X_test_pca, y_train)
+
+    vis_confusion_matrix(mlp_p, y_test)
+    vis_confusion_matrix(knn_p, y_test)
+
+def vis_confusion_matrix(y_pred, y_true):
+    lables = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"] # fick ej att fungera
+    print(confusion_matrix(y_true, y_pred))
+
     
 
 if __name__ == '__main__':
     X_train, X_test, y_train, y_test, X, Y = datasetreader.get_dataset()
 
-    #vis_pca(X, Y, 2)
     
-    #vis_components(X)
 
-    pca = PCA(0.6)
-    principal_components =  pca.fit_transform(X)
 
-    #vis_clusters(principal_components, y_train)
 
-    #pca = PCA(150)
-    #principal_components =  pca.fit_transform(X)
 
-    vis_tSNE(principal_components, Y)

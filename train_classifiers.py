@@ -86,7 +86,7 @@ def evaluate(y_test, y_pred):
 if __name__ == "__main__":
     X_train, X_test, y_train, y_test, X, Y = datasetreader.get_dataset(
         '/Sign-Language-Digits-Dataset-master/Dataset')
-    X_train_pca, X_test_pca = features.apply_PCA(X_train, X_test, 30)
+    X_train_pca, X_test_pca = PCA.apply_PCA(X_train, X_test, 30)
 
 
     #apply_cnn_classifier(X_train, X_test, y_train, y_test)
