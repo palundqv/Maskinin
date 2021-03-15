@@ -7,13 +7,15 @@ from yellowbrick.cluster import KElbowVisualizer
 from sklearn.metrics import classification_report
 from sklearn import metrics
 from sklearn.metrics import accuracy_score
+from sklearn.model_selection import train_test_split
+
 
 def print_cluster_curve(X_train, amount_of_interations):
     # gammal kod, locateOtimalElbow är typ bättre
     cluster_scores = []
     for i in range(1, amount_of_interations):
         kmeans_pca = KMeans(n_clusters=i, random_state=0)
-        kmeans_pca.fit(X_train_pca)
+        kmeans_pca.fit(X_train)
         cluster_scores.append(kmeans_pca.inertia_)
 
     plt.figure(figsize=(10, 8))
@@ -108,11 +110,27 @@ def plot_best_accuracy_score_kmeans(X_train, X_test, max_interation):
     plt.plot(range(1, max_interation), cluster_scores, marker='1', linestyle='--')
     plt.show()
 
+
+def componentplotter(kmeans):
+
+    fig, axes = plt.subplots(3, 5, figsize=(10, 6), subplot_kw={'xticks': (), 'yticks': ()})
+    for i, (component, ax) in enumerate(zip(kmeans.cluster_centers_, axes.ravel())): 
+        ax.imshow(component.reshape(64, 64))
+        ax.set_title("{}. component".format(i+1))
+    plt.show()
+
+
 if __name__ == "__main__":
-    X_train, X_test, y_train, y_test, X, Y = datasetreader.get_dataset()
-    X_train_pca, X_test_pca, pca = PCA.apply_PCA(X_train, X_test, 0.60)
+    X_trainval, X_test, y_trainval, y_test, X, Y = datasetreader.get_dataset()
+
+    X_train, X_val, y_train, y_val = train_test_split(X_trainval, y_trainval, test_size=0.5, random_state=0)
+
+    #X_trainval_pca, X_train_pca, X_val_pca, X_test_pca, pca = PCA.apply_PCA(X_trainval, X_train, X_val, X_test)
     
-    plot_best_accuracy_score_kmeans(X_train_pca, X_test_pca, 500)
+    y_pred, kmeans = apply_Kmeans(X_train, X_test, 64)
+    componentplotter(kmeans)
+
+    #plot_best_accuracy_score_kmeans(X_train_pca, X_test_pca, 500)
     
     #y_pred, kmeans = apply_Kmeans(X_train_pca, X_test_pca, 45)
     #y_pred, kmeans2 = apply_Kmeans(X_train_pca, X_test_pca, 255)
