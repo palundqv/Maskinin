@@ -35,11 +35,10 @@ def evaluate_print(y_test, y_pred):
     print(classification_report(y_test, y_pred, target_names=target_names))
 
 
-def apply_Kmeans(X_train, X_test):
-    kmeans = KMeans(n_clusters=10, random_state=0).fit(X_train)
+def apply_Kmeans(X_train, X_test, n_clusters):
+    kmeans = KMeans(n_clusters, random_state=0).fit(X_train)
     y_pred = kmeans.predict(X_test)
     return y_pred, kmeans
-
 
 
 def retrieve_info(cluster_labels,y_train):
@@ -97,9 +96,11 @@ def calculate_accuracy_kmeans(n_clusters, kmeans, y_train):
 if __name__ == "__main__":
     X_train, X_test, y_train, y_test, X, Y = datasetreader.get_dataset()
     X_train_pca, X_test_pca, pca = PCA.apply_PCA(X_train, X_test, 0.60)
-    y_pred, kmeans = apply_Kmeans(X_train_pca, X_test_pca)
-    print(calculate_accuracy_kmeans(34, kmeans, y_train))
+    y_pred, kmeans = apply_Kmeans(X_train_pca, X_test_pca, 34)
+    y_pred, kmeans = apply_Kmeans(X_train_pca, X_test_pca, 255)
 
+    print(calculate_accuracy_kmeans(34, kmeans, y_train))
+    print(calculate_accuracy_kmeans(255, kmeans, y_train))
 
 '''
 print(kmeans2.cluster_centers_.shape)
