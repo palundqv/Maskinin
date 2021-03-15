@@ -9,7 +9,6 @@ from sklearn.metrics import classification_report
 from sklearn.model_selection import train_test_split
 
 
-
 def apply_MLP_classifier(X_train, X_test, y_train, layers, activation, solver, alpha, learning_rate):
     clf = MLPClassifier(random_state=1, max_iter=300, hidden_layer_sizes=layers,
     activation=activation,solver=solver, alpha=alpha, learning_rate=learning_rate).fit(X_train, y_train)
@@ -17,7 +16,7 @@ def apply_MLP_classifier(X_train, X_test, y_train, layers, activation, solver, a
     return MPL_predicts
 
 def MLP_param(X_train_pca, y_train, X_val_pca):
-    MLP = MLPClassifier(max_iter=1000, learning_rate_init=0.1)
+    MLP = MLPClassifier(max_iter=150)
     grid_params = [{
     'hidden_layer_sizes': [(300,300,300)],
     'activation': ['tanh', 'relu', 'logistic'],
@@ -75,7 +74,10 @@ if __name__ == "__main__":
     MLP.best_params_['learning_rate'])
     print(y_test)
     evaluate(y_test, y_predict)
-    vis.vis_confusion_matrix(y_predict, y_test)
+    conf_matrix = vis.vis_confusion_matrix(y_predict, y_test)
+    print("här")
+    print(conf_matrix)
+    print(vis.conf_accuracy(conf_matrix))
 
 
 
