@@ -6,6 +6,7 @@ import PCA
 import datasetreader
 from sklearn.metrics import classification_report
 from sklearn.model_selection import train_test_split
+from matplotlib.colors import ListedColormap
 
 
 def kNN_param(X_train, X_val, y_train):
@@ -25,10 +26,10 @@ def kNN_param(X_train, X_val, y_train):
     return y_pred, knn_gscv
 
 
-def apply_knn_classifier(X_train_pca, X_test_pca, y_train, neighbors, distance):
-    clf = KNeighborsClassifier(n_neighbors=neighbors, metric=distance).fit(X_train_pca, y_train)
+def apply_knn_classifier(X_trainval_pca, X_test_pca, y_trainval, neighbors, distance):
+    clf = KNeighborsClassifier(n_neighbors=neighbors, metric=distance).fit(X_trainval_pca, y_trainval)
     knn_predicts = clf.predict(X_test_pca)
-    return knn_predicts
+    return knn_predicts, clf
 
 
 def Kneighbors_plotter(n_neighbors, X_train_pca, y_train, X_test_pca, y_test):
@@ -63,14 +64,14 @@ if __name__ == '__main__':
 
     #lista = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
     #for i in lista:
-    X_train_pca, X_val_pca, pca = PCA.apply_PCA(X_train, X_val, 0.6)
+    X_trainval_pca, X_train_pca, X_val_pca, X_test_pca, pca = PCA.apply_PCA(X_trainval, X_train, X_val, X_test, i)
+
 
     y_pred, knn = kNN_param(X_train_pca, X_val_pca, y_train)
     print("Test set score: {:.2f}".format(np.mean(y_pred == y_val)))
     print(knn.best_params_)
 
-    X_trainval_pca, X_test_pca, pca = PCA.apply_PCA(X_trainval, X_test, 0.6)
-    y_predict = apply_knn_classifier(X_trainval_pca, X_test_pca, y_trainval, 
+    y_predict, clf = apply_knn_classifier(X_trainval_pca, X_test_pca, y_trainval, 
     knn.best_params_['n_neighbors'], knn.best_params_['metric'])
     evaluate(y_test, y_predict)
 

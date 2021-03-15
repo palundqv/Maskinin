@@ -76,7 +76,7 @@ def vis_tSNE(X, y):
 
     data_subset = df[feat_cols].values
     
-    tsne = TSNE(n_components=2, verbose=1, perplexity=10, n_iter=1000, learning_rate=1000)
+    tsne = TSNE(n_components=2, verbose=1, perplexity=50, n_iter=1000, learning_rate=1000)
     tsne_results = tsne.fit_transform(data_subset)
 
     df['tsne-2d-one'] = tsne_results[:,0]

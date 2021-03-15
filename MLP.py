@@ -17,10 +17,10 @@ def apply_MLP_classifier(X_train, X_test, y_train, layers, activation, solver, a
     return MPL_predicts
 
 def MLP_param(X_train_pca, y_train, X_val_pca):
-    MLP = MLPClassifier(max_iter=70)
+    MLP = MLPClassifier(max_iter=1000, learning_rate_init=0.1)
     grid_params = [{
-    'hidden_layer_sizes': [(50,50,50), (50,100,50), (100,100,100), (100,50,100)],
-    'activation': ['tanh', 'relu'],
+    'hidden_layer_sizes': [(300,300,300)],
+    'activation': ['tanh', 'relu', 'logistic'],
     'solver': ['sgd', 'adam'],
     'alpha': [0.0001, 0.05],
     'learning_rate': ['constant','adaptive']}]
@@ -60,14 +60,13 @@ if __name__ == "__main__":
 
     X_train, X_val, y_train, y_val = train_test_split(X_trainval, y_trainval, test_size=0.5, random_state=0)
 
-    X_train_pca, X_val_pca, pca = PCA.apply_PCA(X_train, X_val, 0.6)
-    #plot_MPL_params(X_train_pca, X_val_pca, y_train, y_val)
+    X_trainval_pca, X_train_pca, X_val_pca, X_test_pca, pca = PCA.apply_PCA(X_trainval, X_train, X_val, X_test)
+    #plot_MPL_params(X_train_pca, X_test_pca, y_train, y_test)
 
     y_pred, MLP = MLP_param(X_train_pca, y_train, X_val_pca)
     print("Test set score: {:.2f}".format(np.mean(y_pred == y_val)))
     print(MLP.best_params_)
 
-    X_trainval_pca, X_test_pca, pca = PCA.apply_PCA(X_trainval, X_test, 0.6)
     y_predict = apply_MLP_classifier(X_trainval_pca, X_test_pca, y_trainval,
     MLP.best_params_['hidden_layer_sizes'],
     MLP.best_params_['activation'],
@@ -80,7 +79,7 @@ if __name__ == "__main__":
 
 
 
-
+#(50,50,50), (50,100,50), (100,100,100), (100,50,100)
 
 
 
