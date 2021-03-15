@@ -1,6 +1,6 @@
 import datasetreader
 import PCA
-import k_neighbors
+import K_neighbors
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
@@ -91,36 +91,24 @@ def vis_tSNE(X, y):
     alpha=0.3)
     plt.show()
 
-    def vis_classifiers_confusion(X_train, X_test, y_train, y_test):
-        X_train_pca , X_test_pca = apply_PCA(X_train, X_test)
-        mlp_p = apply_MLP_classifier(X_train_pca, X_test_pca, y_train)
-        knn_p = apply_knn_classifier(X_train_pca, X_test_pca, y_train)
+def vis_classifiers_confusion(X_train, X_test, y_train, y_test):
+    X_train_pca , X_test_pca = apply_PCA(X_train, X_test)
+    mlp_p = apply_MLP_classifier(X_train_pca, X_test_pca, y_train)
+    knn_p = apply_knn_classifier(X_train_pca, X_test_pca, y_train)
 
-        vis_confusion_matrix(mlp_p, y_test)
-        vis_confusion_matrix(knn_p, y_test)
+    vis_confusion_matrix(mlp_p, y_test)
+    vis_confusion_matrix(knn_p, y_test)
 
-    def vis_confusion_matrix(y_pred, y_true):
-        lables = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
-        print(confusion_matrix(y_true, y_pred, labels = lables))
+def vis_confusion_matrix(y_pred, y_true):
+    lables = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"] # fick ej att fungera
+    print(confusion_matrix(y_true, y_pred))
 
     
 
 if __name__ == '__main__':
     X_train, X_test, y_train, y_test, X, Y = datasetreader.get_dataset()
 
-    #vis_pca(X, Y, 2)
     
-    #vis_components(X)
-
-    #pca = PCA(0.6)
-    #principal_components =  pca.fit_transform(X)
-
-    #vis_clusters(principal_components, y_train)
-
-    #pca = PCA(150)
-    #principal_components =  pca.fit_transform(X)
-
-    #vis_tSNE(principal_components, Y)
 
 
 

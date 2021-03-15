@@ -40,7 +40,6 @@ def Kneighbors_plotter(n_neighbors, X_train_pca, y_train, X_test_pca, y_test):
         clf = KNeighborsClassifier(n_neighbors = k).fit(X_train_pca, y_train)
         test_accuracy.append(clf.score(X_test_pca, y_test))
         training_accuracy.append(clf.score(X_train_pca, y_train))
-
     plt.plot(neighbors, test_accuracy, label="test accuracy")
     plt.plot(neighbors, training_accuracy, label="training accuracy")
     plt.ylabel("Accuracy")
