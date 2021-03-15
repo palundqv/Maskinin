@@ -8,27 +8,28 @@ import matplotlib.pyplot as plt
 import train_classifiers
 import plot_gallery
 
-def find_best_amount_components_PCA(max_components, n_neighbors,  X_train, X_test, y_train, y_test):
+def find_best_amount_components_PCA(max_components, n_neighbors, X_trainval, X_train, X_val, X_test, y_train, y_val):
     best_score = 0
     best_comp = 0
     for comp in range(1, max_components):
-        pca = PCA(n_components=comp, whiten=True).fit(X_train)
 
-        X_train_pca, X_test_pca = apply_PCA(X_train, X_test)
+        X_trainval_pca, X_train_pca, X_val_pca, X_test_pca, pca = apply_PCA(X_trainval, X_train, X_val, X_test)
 
         clf = KNeighborsClassifier(n_neighbors).fit(X_train_pca, y_train)
 
-        score = clf.score(X_test_pca, y_test)
+        score = clf.score(X_val_pca, y_val)
         if score > best_score:
             best_score = score
             best_comp = comp
     return best_score, best_comp
 
+
 def find_best_amount_neighbors_with_PCA(max_neighbors, max_components, X_train, X_test, y_train, y_test):
     comp = 0
     score = 0
     for k_neighbors in range(1, max_neighbors):
-        best_score, best_comp = find_best_amount_components_PCA(max_components, k_neighbors,  X_train, X_test, y_train, y_test)
+        best_score, best_comp = find_best_amount_components_PCA(max_components, n_neighbors, X_trainval, 
+        X_train, X_val, X_test, y_train, y_val)
         print('Best score: (', best_score, ')best component: (', best_comp, ') K neighbor: ', k_neighbors)
         print(' ')
         if score > best_score:
@@ -38,15 +39,17 @@ def find_best_amount_neighbors_with_PCA(max_neighbors, max_components, X_train, 
         
     return best_score, best_neighbor, best_comp
 
-def apply_PCA(X_train, X_test, n_components=0.95):
+
+def apply_PCA(X_trainval, X_train, X_val, X_test, n_components=0.6):
     # Computing a PCA
     pca = PCA(n_components=n_components, whiten=True).fit(X_train)
-    pca.get_params()
     # appling PCA transformation
+    X_trainval_pca = pca.transform(X_trainval)
     X_train_pca = pca.transform(X_train)
+    X_val_pca = pca.transform(X_val)
     X_test_pca = pca.transform(X_test)
 
-    return X_train_pca, X_test_pca, pca
+    return X_trainval_pca, X_train_pca, X_val_pca, X_test_pca, pca
 
 def vis_num_pca(X):
     # https://jakevdp.github.io/PythonDataScienceHandbook/05.09-principal-component-analysis.html
