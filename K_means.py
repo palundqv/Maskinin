@@ -7,13 +7,16 @@ from yellowbrick.cluster import KElbowVisualizer
 from sklearn.metrics import classification_report
 from sklearn import metrics
 from sklearn.metrics import accuracy_score
+from sklearn.model_selection import train_test_split
+import visualize_data
+
 
 def print_cluster_curve(X_train, amount_of_interations):
     # gammal kod, locateOtimalElbow är typ bättre
     cluster_scores = []
     for i in range(1, amount_of_interations):
         kmeans_pca = KMeans(n_clusters=i, random_state=0)
-        kmeans_pca.fit(X_train_pca)
+        kmeans_pca.fit(X_train)
         cluster_scores.append(kmeans_pca.inertia_)
 
     plt.figure(figsize=(10, 8))
@@ -35,10 +38,14 @@ def evaluate_print(y_test, y_pred):
     print(classification_report(y_test, y_pred, target_names=target_names))
 
 
-def apply_Kmeans(X_train, X_test, n_clusters):
-    kmeans = KMeans(n_clusters, random_state=0).fit(X_train)
-    y_pred = kmeans.predict(X_test)
-    return y_pred, kmeans
+def apply_Kmeans(X_trainval, X_train, X_val, X_test, n_components=30):
+    kmeans = KMeans(n_components, random_state=0).fit(X_train)
+    X_trainval_kmeans = kmeans.transform(X_trainval)
+    X_train_kmeans = kmeans.transform(X_train)
+    X_val_kmeans = kmeans.transform(X_val)
+    X_test_kmeans = kmeans.transform(X_test)
+
+    return X_trainval_kmeans, X_train_kmeans, X_val_kmeans, X_test_kmeans, kmeans
 
 
 def retrieve_info(kmeans, cluster_labels,y_train):
@@ -108,11 +115,26 @@ def plot_best_accuracy_score_kmeans(X_train, X_test, max_interation):
     plt.plot(range(1, max_interation), cluster_scores, marker='1', linestyle='--')
     plt.show()
 
+
+def componentplotter(kmeans):
+
+    fig, axes = plt.subplots(3, 5, figsize=(10, 6), subplot_kw={'xticks': (), 'yticks': ()})
+    for i, (component, ax) in enumerate(zip(kmeans.cluster_centers_, axes.ravel())): 
+        ax.imshow(component.reshape(64, 64))
+        ax.set_title("{}. component".format(i+1))
+    plt.show()
+
+
 if __name__ == "__main__":
-    X_train, X_test, y_train, y_test, X, Y = datasetreader.get_dataset()
-    X_train_pca, X_test_pca, pca = PCA.apply_PCA(X_train, X_test, 0.60)
-    
-    plot_best_accuracy_score_kmeans(X_train_pca, X_test_pca, 500)
+    X_trainval, X_test, y_trainval, y_test, X, Y = datasetreader.get_dataset()
+
+    X_train, X_val, y_train, y_val = train_test_split(X_trainval, y_trainval, test_size=0.5, random_state=0)
+
+    X_trainval_kmeans, X_train_kmeans, X_val_kmeans, X_test_kmeans, kmeans = apply_Kmeans(X_trainval, X_train, X_val, X_test, n_components=30)
+    X_trainval_pca, X_train_pca, X_val_pca, X_test_pca, pca = PCA.apply_PCA(X_trainval_kmeans, X_train_kmeans, X_val_kmeans, X_test_kmeans)
+    visualize_data.vis_PCA_components(X_trainval_kmeans, 15)
+
+    #plot_best_accuracy_score_kmeans(X_train_pca, X_test_pca, 500)
     
     #y_pred, kmeans = apply_Kmeans(X_train_pca, X_test_pca, 45)
     #y_pred, kmeans2 = apply_Kmeans(X_train_pca, X_test_pca, 255)

@@ -11,6 +11,15 @@ import seaborn as sns
 from sklearn.manifold import TSNE
 from sklearn.metrics import confusion_matrix
 
+def vis_kmeans_components(X, n_components):
+    # varje cluster kan ses som en component och fungerar då som en PCA
+    # Här plottas de första 3 x 5 components
+    kmeans = KMeans(n_components, random_state=0).fit(X)
+    fig, axes = plt.subplots(3, 5, figsize=(10, 6), subplot_kw={'xticks': (), 'yticks': ()})
+    for i, (component, ax) in enumerate(zip(kmeans.cluster_centers_, axes.ravel())): 
+        ax.imshow(component.reshape(64, 64))
+        ax.set_title("{}. component".format(i+1))
+    plt.show()
 
 def vis_pca(X, y, n_components=2):
     # https://www.kaggle.com/vinayjaju/t-sne-visualization-sign-language-digit-dataset 
