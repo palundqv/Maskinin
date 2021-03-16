@@ -10,6 +10,7 @@ import pandas as pd
 import seaborn as sns
 from sklearn.manifold import TSNE
 from sklearn.metrics import confusion_matrix
+from sklearn import manifold
 
 def vis_kmeans_components(X, n_components):
     # varje cluster kan ses som en component och fungerar då som en PCA
@@ -93,12 +94,15 @@ def vis_tSNE(X, y):
     plt.figure(figsize=(16,10))
     sns.scatterplot(
     x="tsne-2d-one", y="tsne-2d-two",
-    hue="y",
-    palette=sns.color_palette("hls", 10),
     data=df,
-    legend="full",
+    legend=False,
     alpha=0.3)
+    colors = ["#476A2A", "#7851B8", "#BD3430", "#4A2D4E", "#875525", "#A83683", "#4E655E", "#853541", "#3A3120", "#535D8E"]
+    for i in range(len(X)):
+        # actually plot the digits as text instead of using scatter
+        plt.text(tsne_results[i, 0], tsne_results[i, 1], str(y[i]), color = colors[y[i]], fontdict={'weight': 'bold', 'size': 9})
     plt.show()
+
 
 def vis_classifiers_confusion(X_train, X_test, y_train, y_test):
     X_train_pca , X_test_pca = apply_PCA(X_train, X_test)
@@ -107,6 +111,7 @@ def vis_classifiers_confusion(X_train, X_test, y_train, y_test):
 
     vis_confusion_matrix(mlp_p, y_test)
     vis_confusion_matrix(knn_p, y_test)
+
 
 def vis_confusion_matrix(y_pred, y_true):
     lables = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] # fick ej att fungera
@@ -118,10 +123,33 @@ def conf_accuracy(conf_matrix):
         diagonal_sum += conf_matrix[i][i]
    return diagonal_sum / summed_elements
 
+
+def vis_MDS_cluster():
+    # Stora delar taget från Lecture 09 MDS.ipynb
+    embedding = manifold.MDS(2, max_iter=100, n_init=1)
+    Xprime = embedding.fit_transform(X)
+
+    params = {'legend.fontsize': 'x-large','figure.figsize': (10, 10),
+             'axes.labelsize': 'x-large','xtick.labelsize':'x-large',
+             'ytick.labelsize':'x-large'}
+    plt.rcParams.update(params)
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    labels_temp =[]
+    for i in range(len(y)):
+        labels_temp.append(y[i])
+    hand = ax.scatter(Xprime[:,0], Xprime[:,1], s=15 ,alpha=0.5, c=labels_temp, cmap=plt.cm.brg)
+    plt.legend(handles=hand.legend_elements()[0],labels=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+    plt.xlabel('Embedding Dimension 1'); plt.ylabel('Embedding Dimension 2')
+    ax.grid(); plt.show()
     
 
 if __name__ == '__main__':
     X_train, X_test, y_train, y_test, X, Y = datasetreader.get_dataset()
+    #X_pca = PCA(n_components=10).fit_transform(X)
+    X_kmeans = KMeans(n_clusters=35).fit_transform(X)
+    vis_tSNE(X, Y)
+    
 
     #vis_pca(X, Y)
 
