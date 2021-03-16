@@ -61,9 +61,14 @@ def find_components_from_pic(X_train, y_test, y_predict):
             indicies.append(i)
     print(X_train_pca[indicies[0]])
 
-
-
-
+    X_inv = pca.inverse_transform(X_train_pca) 
+    #reshaping as 400 images of 64x64 dimension
+    X_proj_img = np.reshape(X_inv,(len(X_train),64,64)) 
+    #Setup a figure 8 inches by 8 inches
+    fig = plt.figure(figsize=(6,6)) 
+    fig.subplots_adjust(left=0, right=1, bottom=0, top=1, hspace=0.05, wspace=0.05) # plot the faces, each image is 64 by 64 dimension but 8x8 pixels
+    ax = fig.add_subplot(8, 8, i+1, xticks=[], yticks=[]) 
+    ax.imshow(X_proj_img[i], cmap=plt.cm.bone, interpolation='nearest') 
 
 if __name__ == "__main__":
     X_trainval, X_test, y_trainval, y_test, X, Y = datasetreader.get_dataset(
@@ -84,7 +89,6 @@ if __name__ == "__main__":
     MLP.best_params_['solver'],
     MLP.best_params_['alpha'],
     MLP.best_params_['learning_rate'])
-    print(y_test)
     evaluate(y_test, y_predict)
     #print(vis.conf_accuracy(vis.vis_confusion_matrix(y_predict, y_test)))
     #plot_gallery.plotGallery(X_test, y_predict, y_test, 3)
