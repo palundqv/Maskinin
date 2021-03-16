@@ -22,7 +22,7 @@ def vis_kmeans_components(X, n_components):
         ax.set_title("{}. component".format(i+1))
     plt.show()
 
-def vis_pca(X, y, n_components=5):
+def vis_pca(X, y, n_components=2):
     # https://www.kaggle.com/vinayjaju/t-sne-visualization-sign-language-digit-dataset 
     #Plottar de två första principal components som tagits fram av PCA.
     pca = PCA(n_components)
@@ -36,7 +36,7 @@ def vis_pca(X, y, n_components=5):
     pc_df['labels'] = labels_temp
     pc_df['Labels'] = (pc_df['labels']).astype(str)
 
-    sns.scatterplot(pc_df['principal_component 1'], pc_df['principal_component 2'], hue=pc_df['str_labels'], alpha=0.7)
+    sns.scatterplot(pc_df['principal_component1'], pc_df['principal_component2'], hue=pc_df['Labels'], alpha=0.7)
     plt.show()
 
 
@@ -49,7 +49,7 @@ def vis_PCA_components(X, n_components):
     fix, axes = plt.subplots(3, 5, figsize=(15, 12),
     subplot_kw={'xticks': (), 'yticks': ()})
     for i, (component, ax) in enumerate( zip(pca.components_, axes.ravel()) ):
-        ax.imshow(component.reshape(64, 64), cmap='gray')
+        ax.imshow(component.reshape(64, 64))
         ax.set_title("{}. component".format((i + 1)))
     plt.show()
 
@@ -115,7 +115,12 @@ def vis_classifiers_confusion(X_train, X_test, y_train, y_test):
 
 def vis_confusion_matrix(y_pred, y_true):
     lables = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"] # fick ej att fungera
-    print(confusion_matrix(y_true, y_pred))
+    return confusion_matrix(y_true, y_pred)
+
+def conf_accuracy(conf_matrix):
+   diagonal_sum = conf_matrix.diagonal()
+   summed_elements = confusion_matrix.sum()
+   return diagonal_sum / summed_elements
 
 
 def vis_MDS_cluster():
