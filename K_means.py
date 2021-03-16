@@ -11,19 +11,6 @@ from sklearn.model_selection import train_test_split
 import visualize_data
 
 
-def print_cluster_curve(X_train, amount_of_interations):
-    # gammal kod, locateOtimalElbow är typ bättre
-    cluster_scores = []
-    for i in range(1, amount_of_interations):
-        kmeans_pca = KMeans(n_clusters=i, random_state=0)
-        kmeans_pca.fit(X_train)
-        cluster_scores.append(kmeans_pca.inertia_)
-
-    plt.figure(figsize=(10, 8))
-    plt.plot(range(1, amount_of_interations), cluster_scores, marker='o', linestyle='--')
-    plt.show()
-
-
 def plotOptimalElbow(X_train, max_interation):
     # https://www.scikit-yb.org/en/latest/api/cluster/elbow.html#:~:text=The%20elbow%20method%20runs%20k,point%20to%20its%20assigned%20center.
     # med PCA.apply_PCA(X_train, X_test, 0.60) blev resultatet k = 32
@@ -116,29 +103,20 @@ def plot_best_accuracy_score_kmeans(X_train, X_test, max_interation):
     plt.show()
 
 
-def componentplotter(kmeans):
-
-    fig, axes = plt.subplots(3, 5, figsize=(10, 6), subplot_kw={'xticks': (), 'yticks': ()})
-    for i, (component, ax) in enumerate(zip(kmeans.cluster_centers_, axes.ravel())): 
-        ax.imshow(component.reshape(64, 64))
-        ax.set_title("{}. component".format(i+1))
-    plt.show()
-
-
 if __name__ == "__main__":
     X_trainval, X_test, y_trainval, y_test, X, Y = datasetreader.get_dataset()
 
     X_train, X_val, y_train, y_val = train_test_split(X_trainval, y_trainval, test_size=0.5, random_state=0)
 
-    X_trainval_kmeans, X_train_kmeans, X_val_kmeans, X_test_kmeans, kmeans = apply_Kmeans(X_trainval, X_train, X_val, X_test, n_components=30)
-    X_trainval_pca, X_train_pca, X_val_pca, X_test_pca, pca = PCA.apply_PCA(X_trainval_kmeans, X_train_kmeans, X_val_kmeans, X_test_kmeans)
-    visualize_data.vis_PCA_components(X_trainval_kmeans, 15)
+    #X_trainval_kmeans, X_train_kmeans, X_val_kmeans, X_test_kmeans, kmeans = apply_Kmeans(X_trainval, X_train, X_val, X_test, n_components=30)
+    #X_trainval_pca, X_train_pca, X_val_pca, X_test_pca, pca = PCA.apply_PCA(X_trainval_kmeans, X_train_kmeans, X_val_kmeans, X_test_kmeans)
+    #visualize_data.vis_PCA_components(X_trainval_kmeans, 15)
 
     #plot_best_accuracy_score_kmeans(X_train_pca, X_test_pca, 500)
     
     #y_pred, kmeans = apply_Kmeans(X_train_pca, X_test_pca, 45)
     #y_pred, kmeans2 = apply_Kmeans(X_train_pca, X_test_pca, 255)
 
-    #plotOptimalElbow(X_train_pca, 500)
+    plotOptimalElbow(X_train, 300)
     #print(calculate_accuracy_kmeans(kmeans, y_train))
     #print(calculate_accuracy_kmeans(kmeans2, y_train))

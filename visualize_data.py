@@ -102,8 +102,8 @@ def vis_tSNE(X, y):
 
 def vis_classifiers_confusion(X_train, X_test, y_train, y_test):
     X_train_pca , X_test_pca = apply_PCA(X_train, X_test)
-    mlp_p = apply_MLP_classifier(X_train_pca, X_test_pca, y_train)
-    knn_p = apply_knn_classifier(X_train_pca, X_test_pca, y_train)
+    mlp_p = MLP.apply_MLP_classifier(X_train_pca, X_test_pca, y_train)
+    knn_p = K_neighbors.apply_knn_classifier(X_train_pca, X_test_pca, y_train)
 
     vis_confusion_matrix(mlp_p, y_test)
     vis_confusion_matrix(knn_p, y_test)
@@ -124,7 +124,11 @@ if __name__ == '__main__':
 
     #vis_pca(X, Y)
 
-    vis_PCA_components(X,0.95)
+    #vis_PCA_components(X,0.95)
+    pca = PCA(0.95)
+    principal_components =  pca.fit_transform(X)
 
+    #vis_clusters(principal_components, Y)
+    vis_tSNE(principal_components,Y)
 
 

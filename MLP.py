@@ -3,6 +3,7 @@ import PCA
 import matplotlib.pyplot as plt
 import numpy as np
 import visualize_data as vis
+import plot_gallery
 from sklearn.model_selection import GridSearchCV
 from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import classification_report
@@ -30,7 +31,7 @@ def MLP_param(X_train_pca, y_train, X_val_pca):
 
 
 def plot_MPL_params(X_train_pca, X_test_pca, y_train, y_test):
-    max_miters = 200
+    max_miters = 500
     training_error = []
     validation_error = []
     t = np.linspace(0, max_miters, max_miters)
@@ -38,8 +39,6 @@ def plot_MPL_params(X_train_pca, X_test_pca, y_train, y_test):
         clf = MLPClassifier(random_state = 1, max_iter=iteration + 1).fit(X_train_pca, y_train)
         t_predicts = clf.predict(X_train_pca)
         v_predicts = clf.predict(X_test_pca)
-        #print((t_predicts == y_train).type())
-        #print((v_predicts == y_test).type())
         training_error.append(1 - ((t_predicts == y_train).sum() / len(y_train)))
         validation_error.append(1 - ((v_predicts == y_test).sum() / len(y_test)))
     plt.plot(t, training_error)
@@ -75,13 +74,13 @@ if __name__ == "__main__":
     print(y_test)
     evaluate(y_test, y_predict)
     conf_matrix = vis.vis_confusion_matrix(y_predict, y_test)
-    print("här")
-    print(conf_matrix)
-    print(vis.conf_accuracy(conf_matrix))
 
 
 
-#(50,50,50), (50,100,50), (100,100,100), (100,50,100)
+    #plot_gallery.plotGallery(X_test, y_predict, y_test, 5)
+
+
+
 
 
 
