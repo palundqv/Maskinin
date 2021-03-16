@@ -59,4 +59,3 @@ if __name__ == '__main__':
     X_train, X_test, Y_train, Y_test, X, Y  = get_dataset('Sign-Language-Digits-Dataset-master\Dataset')
     print(X_train)
 
-    print(X.shape)

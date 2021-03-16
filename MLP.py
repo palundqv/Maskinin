@@ -4,11 +4,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 import visualize_data as vis
 import plot_gallery
+from sklearn.decomposition import PCA as prins_comp
 from sklearn.model_selection import GridSearchCV
 from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import classification_report
 from sklearn.model_selection import train_test_split
-
 
 def apply_MLP_classifier(X_train, X_test, y_train, layers, activation, solver, alpha, learning_rate):
     clf = MLPClassifier(random_state=1, max_iter=300, hidden_layer_sizes=layers,
@@ -50,26 +50,31 @@ def evaluate(y_test, y_pred):
     # printar ut tabell med precision, recall, accuracy och f-measure
     target_names = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
     print(classification_report(y_test, y_pred, target_names=target_names))
-
-def find_components_from_pic(X_train, y_test, y_predict):
+ 
+def find_components_from_pic(X_train, X_test, y_test, y_predict):
     # Finds the indicies where
-    pca = PCA(n_components=0.6, whiten=True).fit(X_train)
-    X_train_pca = pca.transform(X_train)
+    pca = prins_comp(n_components=0.6, whiten=True).fit(X_train)
+    X_test_pca = pca.transform(X_test)
     indicies = []
     for i in range(len(y_test)):
         if (y_test[i] == 6 or y_test[i] == 4) and y_test[i] != y_predict[i]:
             indicies.append(i)
-    print(X_train_pca[indicies[0]])
+    print(X_test_pca[indicies[0]])
 
-    X_inv = pca.inverse_transform(X_train_pca) 
-    #reshaping as 400 images of 64x64 dimension
-    X_proj_img = np.reshape(X_inv,(len(X_train),64,64)) 
-    #Setup a figure 8 inches by 8 inches
+    X_inv = pca.inverse_transform(X_test_pca) 
+    #reshaping as len of train images of 64x64 dimension
+    X_proj_img = np.reshape(X_inv, (len(X_test),64,64)) 
+    
     fig = plt.figure(figsize=(6,6)) 
     fig.subplots_adjust(left=0, right=1, bottom=0, top=1, hspace=0.05, wspace=0.05) # plot the faces, each image is 64 by 64 dimension but 8x8 pixels
-    ax = fig.add_subplot(8, 8, i+1, xticks=[], yticks=[]) 
-    ax.imshow(X_proj_img[i], cmap=plt.cm.bone, interpolation='nearest') 
-
+    print(y_test[indicies[1]])
+    print(y_predict[indicies[1]])
+    plt.imshow(X_proj_img[indicies[1]], cmap=plt.cm.bone, interpolation='nearest') 
+    plt.show()
+    X_test_img = np.reshape(X_test, (len(X_test),64,64))
+    plt.imshow(X_test_img[indicies[1]], cmap=plt.cm.bone, interpolation='nearest') 
+    plt.show()
+    
 if __name__ == "__main__":
     X_trainval, X_test, y_trainval, y_test, X, Y = datasetreader.get_dataset(
         'Sign-Language-Digits-Dataset-master\Dataset')
@@ -90,9 +95,11 @@ if __name__ == "__main__":
     MLP.best_params_['alpha'],
     MLP.best_params_['learning_rate'])
     evaluate(y_test, y_predict)
+    
     #print(vis.conf_accuracy(vis.vis_confusion_matrix(y_predict, y_test)))
     #plot_gallery.plotGallery(X_test, y_predict, y_test, 3)
-    find_components_from_pic(X_trainval_pca, y_test, y_predict)
+    find_components_from_pic(X_trainval_pca, X_test, y_test, y_predict)
+    
 
 
 
