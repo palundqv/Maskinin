@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import PCA
 import datasetreader
+import visualize_data as vis
 from sklearn.metrics import classification_report
 from sklearn.model_selection import train_test_split
 from matplotlib.colors import ListedColormap
@@ -64,7 +65,7 @@ if __name__ == '__main__':
 
     #lista = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
     #for i in lista:
-    X_trainval_pca, X_train_pca, X_val_pca, X_test_pca, pca = PCA.apply_PCA(X_trainval, X_train, X_val, X_test, i)
+    X_trainval_pca, X_train_pca, X_val_pca, X_test_pca, pca = PCA.apply_PCA(X_trainval, X_train, X_val, X_test)
 
 
     y_pred, knn = kNN_param(X_train_pca, X_val_pca, y_train)
@@ -73,6 +74,7 @@ if __name__ == '__main__':
 
     y_predict, clf = apply_knn_classifier(X_trainval_pca, X_test_pca, y_trainval, 
     knn.best_params_['n_neighbors'], knn.best_params_['metric'])
+    print(vis.vis_confusion_matrix(y_predict, y_test))
     evaluate(y_test, y_predict)
 
 

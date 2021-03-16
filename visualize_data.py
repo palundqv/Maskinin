@@ -109,12 +109,13 @@ def vis_classifiers_confusion(X_train, X_test, y_train, y_test):
     vis_confusion_matrix(knn_p, y_test)
 
 def vis_confusion_matrix(y_pred, y_true):
-    lables = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"] # fick ej att fungera
-    return confusion_matrix(y_true, y_pred)
+    lables = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] # fick ej att fungera
+    return confusion_matrix(y_true, y_pred, labels=lables)
 
 def conf_accuracy(conf_matrix):
-   diagonal_sum = conf_matrix.diagonal()
-   summed_elements = confusion_matrix.sum()
+   diagonal_sum = 0
+   for i in range(len(conf_matrix[:])):
+        diagonal_sum += conf_matrix[i][i]
    return diagonal_sum / summed_elements
 
     
