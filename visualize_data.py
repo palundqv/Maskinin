@@ -11,6 +11,7 @@ import seaborn as sns
 from sklearn.manifold import TSNE
 from sklearn.metrics import confusion_matrix
 from sklearn import manifold
+from sklearn.neighbors import KNeighborsClassifier
 
 def vis_kmeans_components(X, n_components):
     # varje cluster kan ses som en component och fungerar då som en PCA
@@ -113,9 +114,46 @@ def vis_classifiers_confusion(X_train, X_test, y_train, y_test):
     vis_confusion_matrix(knn_p, y_test)
 
 
-def vis_confusion_matrix(y_pred, y_true):
-    lables = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] # fick ej att fungera
-    return confusion_matrix(y_true, y_pred, labels=lables)
+def print_vis_confusion_matrix(y_pred, y_true):
+
+    confusion = confusion_matrix(y_true, y_pred)
+
+    labels = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+    print_cm(confusion, labels)
+
+def print_cm(cm, labels, hide_zeroes=False, hide_diagonal=False, hide_threshold=None):
+    """pretty print for confusion matrixes"""
+    """taken from https://gist.github.com/zachguo/10296432"""
+    columnwidth = max([len(x) for x in labels] + [5])  # 5 is value length
+    empty_cell = " " * columnwidth
+    
+    # Begin CHANGES
+    fst_empty_cell = (columnwidth-3)//2 * " " + "t\p" + (columnwidth-3)//2 * " "
+    
+    if len(fst_empty_cell) < len(empty_cell):
+        fst_empty_cell = " " * (len(empty_cell) - len(fst_empty_cell)) + fst_empty_cell
+    # Print header
+    print("    " + fst_empty_cell, end=" ")
+    # End CHANGES
+    
+    for label in labels:
+        print("%{0}s".format(columnwidth) % label, end=" ")
+        
+    print()
+    # Print rows
+    for i, label1 in enumerate(labels):
+        print("    %{0}s".format(columnwidth) % label1, end=" ")
+        for j in range(len(labels)):
+            cell = "%{0}.2f".format(columnwidth) % cm[i, j]
+            if hide_zeroes:
+                cell = cell if float(cm[i, j]) != 0 else empty_cell
+            if hide_diagonal:
+                cell = cell if i != j else empty_cell
+            if hide_threshold:
+                cell = cell if cm[i, j] > hide_threshold else empty_cell
+            print(cell, end=" ")
+        print()
+
 
 def conf_accuracy(conf_matrix):
    diagonal_sum = 0
@@ -146,6 +184,12 @@ def vis_MDS_cluster():
 
 if __name__ == '__main__':
     X_train, X_test, y_train, y_test, X, Y = datasetreader.get_dataset()
+    KNN = KNeighborsClassifier(10).fit(X_train, y_train)
+    y_pred = KNN.predict(X_test)
+    print_vis_confusion_matrix(y_pred, y_test)
+    #vis_kmeans_components(X, 15)
+
+    '''
     #X_pca = PCA(n_components=10).fit_transform(X)
     X_kmeans = KMeans(n_clusters=35).fit_transform(X)
     vis_tSNE(X, Y)
@@ -158,6 +202,5 @@ if __name__ == '__main__':
     principal_components =  pca.fit_transform(X)
 
     #vis_clusters(principal_components, Y)
-    vis_tSNE(principal_components,Y)
-
-
+    vis_tSNE(principal_components,Y)   
+    '''

@@ -19,10 +19,17 @@ def plotOptimalElbow(X_train, max_interation):
     model.show()
 
 
-def evaluate_print(y_test, y_pred):
+def evaluate_print(y_train, kmeans):
     # printar ut tabell med precision, recall, accuracy och f-measure
     target_names = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
-    print(classification_report(y_test, y_pred, target_names=target_names))
+
+    reference_labels = retrieve_info(kmeans, kmeans.labels_, y_train)
+    number_labels = np.random.rand(len(kmeans.labels_))
+    for i in range(len(kmeans.labels_)):
+        number_labels[i] = reference_labels[kmeans.labels_[i]]
+    print(number_labels.shape)
+
+    print(classification_report(y_train, number_labels, target_names=target_names))
 
 
 def apply_Kmeans(X_trainval, X_train, X_val, X_test, n_components=30):
@@ -114,9 +121,6 @@ if __name__ == "__main__":
 
     #plot_best_accuracy_score_kmeans(X_train_pca, X_test_pca, 500)
     
-    #y_pred, kmeans = apply_Kmeans(X_train_pca, X_test_pca, 45)
-    #y_pred, kmeans2 = apply_Kmeans(X_train_pca, X_test_pca, 255)
-
-    plotOptimalElbow(X_train, 300)
-    #print(calculate_accuracy_kmeans(kmeans, y_train))
-    #print(calculate_accuracy_kmeans(kmeans2, y_train))
+    X_trainval_kmeans, X_train_kmeans, X_val_kmeans, X_test_kmeans, kmeans = apply_Kmeans(X_trainval, X_train, X_val, X_test, n_components=30)
+    print(kmeans.predict(X_test).shape)
+    evaluate_print(y_train, kmeans)
